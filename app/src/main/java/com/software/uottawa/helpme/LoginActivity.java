@@ -18,11 +18,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 //Login FORM based on https://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    FirebaseUser fireUser;
 
     private EditText mEmailField;
     private EditText mPasswordField;
@@ -31,13 +39,22 @@ public class LoginActivity extends AppCompatActivity {
     private Button mLoginButton;
     private Button mSignUpButton;
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /* INIT */
         mAuth = FirebaseAuth.getInstance();
+      database = FirebaseDatabase.getInstance();
+      ref = database.getReference("users");
+      fireUser = mAuth.getCurrentUser();
+
+        /* INIT */
+
         mEmailField = findViewById(R.id.email_edit_text);
         mPasswordField = findViewById(R.id.password_edit_text);
         mEmailLayout = findViewById(R.id.email_input_layout);
@@ -97,17 +114,45 @@ public class LoginActivity extends AppCompatActivity {
         if (validateForm()) {
             String password = mPasswordField.getText().toString();
             String email = mEmailField.getText().toString();
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        updateUI();
-                    } else {
-                        mEmailLayout.setError("Incorrect Email or Password");
-                        mPasswordLayout.setError("Incorrect Email or Password");
-                    }
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+            @Override
+            public void onComplete (@NonNull Task < AuthResult > task) {
+                if (task.isSuccessful()) {
+                    //   updateUI();
+
+
+                    ref.child(fireUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User myUser = dataSnapshot.getValue(User.class);
+
+                            if (myUser.getTypeOfUser() "ADMIN") {
+                                Intent AdmintActivtuy
+
+                            } else if (myUser.getTypeOfUser() == "SP") {
+                                startSer
+                            } else {
+                                homeosever
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                } else {
+                    mEmailLayout.setError("Incorrect Email or Password");
+                    mPasswordLayout.setError("Incorrect Email or Password");
                 }
+
+            }
             });
+
+
+
         }
     }
 
@@ -129,4 +174,8 @@ public class LoginActivity extends AppCompatActivity {
         }
         return isValid;
     }
+
+
+
+
 }

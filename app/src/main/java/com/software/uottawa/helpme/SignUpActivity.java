@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,20 +41,23 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mFirstName;
     private EditText mLastName;
 
-    private TextInputLayout mConstraintUser;
-    private TextInputLayout mEmailLayout;
-    private TextInputLayout mPasswordLayout;
-    private TextInputLayout mPasswordConfirmLayout;
-    private TextInputLayout mFirstNameLayout;
-    private TextInputLayout mLastNameLayout;
+    private TextView mConstraintUser;
+    private TextView mEmailLayout;
+    private TextView mPasswordLayout;
+    private TextView mPasswordConfirmLayout;
+    private TextView mFirstNameLayout;
+    private TextView mLastNameLayout;
 
-    private CheckBox mIsOwner;
-    private CheckBox mIsProvider;
+
     private List<User> mUsers;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUsers;
-    private Boolean IsAdmin = false;
+    private String typeOfUser;
 
+
+    private  RadioGroup rg;
+
+    private RadioButton radioHome;
 
     private Button mSignUp;
 
@@ -74,59 +80,30 @@ public class SignUpActivity extends AppCompatActivity {
         mPasswordConfirmLayout = findViewById(R.id.password_confirm_input_layout);
         mFirstNameLayout = findViewById(R.id.service_name);
         mLastNameLayout = findViewById(R.id.last_name_input_layout);
-        mConstraintUser = findViewById(R.id.constraint_user);
 
-        mIsOwner = findViewById(R.id.cbxOwnerUser);
-        mIsProvider = findViewById(R.id.cbxProviderUser);
+        rg = (RadioGroup) findViewById(R.id.radioGroup);
+        radioHome =  (RadioButton) findViewById(R.id.radioHomeO);
+
+        getTypeOfUser();
 
         mSignUp = findViewById(R.id.btn_sign_up);
-        mSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAccount();
-            }
-        });
 
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+        getTypeOfUser();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mFirstNameLayout.setError(null);
-                mLastNameLayout.setError(null);
-                mEmailLayout.setError(null);
-                mPasswordLayout.setError(null);
-                mPasswordConfirmLayout.setError(null);
-                mConstraintUser.setError(null);
-                mIsOwner.setError(null);
-                mIsProvider.setError(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        };
-
-        mFirstName.addTextChangedListener(textWatcher);
-        mLastName.addTextChangedListener(textWatcher);
-        mEmailField.addTextChangedListener(textWatcher);
-        mPasswordField.addTextChangedListener(textWatcher);
-        mPasswordConfirmField.addTextChangedListener(textWatcher);
     }
 
-    private void createAccount() {
+
+    public void createAccount(View v) {
         if (isValidForm()) {
 
             final String email = mEmailField.getText().toString();
             final String password = mPasswordField.getText().toString();
             final String firstName = mFirstName.getText().toString();
             final String lastName = mLastName.getText().toString();
-            final Boolean isOwner = mIsOwner.isChecked();
-            final Boolean isProvider = mIsProvider.isChecked();
+
+
+
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
@@ -137,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                         //Add user to database
                         String id = mAuth.getCurrentUser().getUid();
-                        User user = new User(id, firstName, lastName, email, isOwner, isProvider);
+                        User user = new User(id, firstName, lastName, email, typeOfUser);
                         mDatabaseUsers.child(id).setValue(user);
 
                         //Send user to task list
@@ -164,19 +141,18 @@ public class SignUpActivity extends AppCompatActivity {
         String passwordConfirm = mPasswordConfirmField.getText().toString();
         String firstName = mFirstName.getText().toString();
         String lastName = mLastName.getText().toString();
-        Boolean isOwner = mIsOwner.isChecked();
-        Boolean isProvider = mIsProvider.isChecked();
+
 
         if (TextUtils.isEmpty(email)) {
-            mEmailLayout.setError("Email is required!");
+            mEmailField.setError("Email is required!");
             isValid = false;
         }
         if (TextUtils.isEmpty(firstName)) {
-            mFirstNameLayout.setError("Name is required!");
+            mFirstName.setError("Name is required!");
             isValid = false;
         }
         if (TextUtils.isEmpty(lastName)) {
-            mLastNameLayout.setError("Name is required");
+            mLastName.setError("Name is required");
             isValid = false;
         }
         if (TextUtils.isEmpty(password)) {
@@ -184,29 +160,32 @@ public class SignUpActivity extends AppCompatActivity {
             isValid = false;
         }
         if (TextUtils.isEmpty(passwordConfirm)) {
-            mPasswordConfirmLayout.setError("Password Confirmation is required");
+            mPasswordConfirmField.setError("Password Confirmation is required");
             isValid = false;
         }
         //firebase limitation to a minimum of 6 characters for a password
         if (password.length() < 6) {
             mPasswordLayout.setError("Password need atleast 6 characters");
-            mPasswordConfirmLayout.setError("Password need atleast 6 characters");
+            mPasswordConfirmField.setError("Password need atleast 6 characters");
             isValid = false;
         }
         if (!password.equals(passwordConfirm)) {
             mPasswordLayout.setError("Passwords don't match");
-            mPasswordConfirmLayout.setError("Passwords don't match");
+            mPasswordConfirmField.setError("Passwords don't match");
             isValid = false;
         }
-        if(isOwner.equals(isProvider) && !IsAdmin){
-            mConstraintUser.setError("We can have only one admin");
-            isValid = false;
+
+
+        if (rg.getCheckedRadioButtonId() == -1)
+        {
+            radioHome.setError("Please select a Type of User");
         }
+
 
         return isValid;
     }
 
-    @Override
+   /* @Override
     protected void onStart() {
         super.onStart();
 
@@ -227,5 +206,31 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+*/
+    private void getTypeOfUser() {
+
+
+
+
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.radioAdmin:
+                        typeOfUser = "ADMIN";
+                        break;
+                    case R.id.radioSP:
+                            typeOfUser = "SP";
+                        break;
+                    case R.id.radioHomeO:
+
+                        typeOfUser = "HOMEOWNER";
+                        break;
+                }
+            }
+        });
+
     }
 }

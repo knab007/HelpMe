@@ -44,12 +44,11 @@
             tools:text="EMAIL@EMAIL.COM" />
 
         <TextView
-            android:id="@+id/isOwner"
+            android:id="@+id/typeOfUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-            android:textSize="32sp"
-            tools:text="@string/isOwner" />
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/user_points"

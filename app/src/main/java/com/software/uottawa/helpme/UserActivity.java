@@ -31,6 +31,7 @@ public class UserActivity extends AppCompatActivity {
     private DatabaseReference mUserData;
     private StorageReference mStorage;
     private String mUserId;
+    private String mTypeOfUser;
 
     private TextView mNameTextView;
     private TextView mEmailTextView;

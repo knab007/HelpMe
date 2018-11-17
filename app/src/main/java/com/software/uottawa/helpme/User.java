@@ -13,19 +13,20 @@ public class User {
     private String mFirstName;
     private String mLastName;
     private String mEmail;
-    private boolean isOwner;
-    private boolean isProvider;
+
+
+
+    private String typeOfUser;
     private int mPoints;
     private List<String> mAssignedServices;
 
     /* Constructeurs */
-    public User(String mId, String mFirstName, String mLastName, String mEmail, boolean isOwner, boolean isProvider) {
+    public User(String mId, String mFirstName, String mLastName, String mEmail, String type) {
         this.mId = mId;
         this.mFirstName = mFirstName;
         this.mLastName = mLastName;
         this.mEmail = mEmail;
-        this.isOwner = isOwner;
-        this.isProvider = isProvider;
+        this.typeOfUser = type;
 
         this.mPoints = 0;
         this.mAssignedServices = new ArrayList<>();
@@ -75,21 +76,14 @@ public class User {
     }
 
 
-    public void setIsOwner(Boolean isOwner){
-        this.isOwner = isOwner;
+    public String getTypeOfUser() {
+        return typeOfUser;
     }
 
-    public Boolean getIsOwner(){
-        return isOwner;
+    public void setTypeOfUser(String typeOfUser) {
+        this.typeOfUser = typeOfUser;
     }
 
-    public void setIsProvider(Boolean isProvider){
-        this.isProvider = isProvider;
-    }
-
-    public Boolean getIsProvider(){
-        return isProvider;
-    }
 
     public int getPoints() {
         return mPoints;

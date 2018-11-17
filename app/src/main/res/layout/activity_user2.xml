@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
             android:textSize="32sp"
-            tools:text="@string/isOwner" />
+            tools:text="@string/typeOfUser" />
 
         <TextView
             android:id="@+id/user_points"

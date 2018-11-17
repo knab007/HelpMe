@@ -41,7 +41,7 @@
     <string name="action_save">Save</string>
     <string name="points">+1 point</string>
     <string name="Points">Point:</string>
-    <string name="isOwner">Role</string>
+    <string name="typeOfUser">Role</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_show_group">Show Family</string>
     <string name="serviceviewswitch">View My Service</string>

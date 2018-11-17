@@ -125,7 +125,7 @@ public class ServiceListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+/*
         FloatingActionButton newGroupFab = findViewById(R.id.fab_new_group);
         newGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +134,7 @@ public class ServiceListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+*/
         mServicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
