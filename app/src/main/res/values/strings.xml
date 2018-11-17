@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Service Manager</string>
+
+    <!--Activity Titles-->
+    <string name="title_activity_service_list">Service List</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_new_service">Add Service</string>
+    <string name="title_activity_user_settings">User info</string>
+    <string name="title_activity_edit_service">Edit Service</string>
+    <string name="title_activity_new_family">New Family</string>
+
+    <!-- Arrays -->
+    <string-array name="appUsers">appUsers</string-array>
+
+    <!--Button Text-->
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_Add_service">Add Service</string>
+    <string name="btn_users">Assign Users</string>
+    <string name="btn_res"> Assign Ressources </string>
+    <string name="btn_add_items">Add Items</string>
+
+
+    <!--Text Input Hints & Labels-->
+    <string name="hint_first">First Name</string>
+    <string name="hint_last">Last Name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm">Confirm Password</string>
+    <string name="hint_sname">Service Name</string>
+    <string name="label_I">Incomplet</string>
+    <string name="label_EC">En cours</string>
+    <string name="label_C">Complete</string>
+    <string name="hint_sdesc">Service Description</string>
+    <string name="hint_date">Due Date</string>
+
+
+    <!--Menu Item Labels-->
+    <string name="user_settings">User Settings</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_save">Save</string>
+    <string name="points">+1 point</string>
+    <string name="Points">Point:</string>
+    <string name="isOwner">Role</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_show_group">Show Family</string>
+    <string name="serviceviewswitch">View My Service</string>
+    <string name="btn_add_resources">View My Services</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_view_service">View Service</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="btn_sign_out">Sign Out</string>
+
+
+</resources>

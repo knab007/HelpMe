@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "947941586149",
+    "firebase_url": "https://helpme-a0159.firebaseio.com",
+    "project_id": "helpme-a0159",
+    "storage_bucket": "helpme-a0159.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947941586149:android:de7e2f9677e4e4b3",
+        "android_client_info": {
+          "package_name": "com.software.uottawa.helpme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947941586149-tadujtftdvvjmmuplvqv89e151lqofih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbMzM2UysOf9kOPPG6W-Iw7RayS2kTLlk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,172 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/edit_service_name_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/edit_service_description_layout">
+
+        <EditText
+            android:id="@+id/edit_service_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nom du service"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:text="" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/edit_service_description_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_service_name_layout">
+
+        <EditText
+            android:id="@+id/edit_service_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:text=""/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/edit_service_instruction_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_service_description_layout">
+
+        <EditText
+            android:id="@+id/edit_service_instruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Service instruction" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/edit_due_hourly_rate_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_service_instruction_layout">
+
+        <EditText
+            android:id="@+id/edit_due_hourly_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Hourly Rate"
+            android:inputType="date" />
+    </android.support.design.widget.TextInputLayout>
+
+
+
+    <RadioGroup
+        android:id="@+id/edit_status_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_due_hourly_rate_layout">
+
+        <RadioButton
+            android:id="@+id/edit_radio_incomplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Incomplet"/>
+
+        <RadioButton
+            android:id="@+id/edit_radio_in_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="En cours"/>
+
+        <RadioButton
+            android:id="@+id/edit_radio_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complete"/>
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/edit_res_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_status_radio_group">
+
+        <RadioButton
+            android:id="@+id/edit_radio_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Money"/>
+
+        <RadioButton
+            android:id="@+id/edit_radio_clean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cleaning Kit"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_res_radio_group">
+
+        <Button
+            android:id="@+id/edit_btn_assign_resources"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select ressource" />
+
+        <Button
+            android:id="@+id/edit_btn_assign_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select user" />
+
+        <Button
+            android:id="@+id/btn_del_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete service" />
+
+        <Button
+            android:id="@+id/btn_save_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save Serv" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
