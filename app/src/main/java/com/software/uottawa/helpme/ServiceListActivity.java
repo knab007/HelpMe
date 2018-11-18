@@ -44,12 +44,10 @@ public class ServiceListActivity extends AppCompatActivity {
 
     private FloatingActionButton mFAB;
     private LinearLayout mAddServiceLayout;
-    private LinearLayout mNewGroupLayout;
     private Switch mServiceSwitch;
 
     private ListView mServicesListView;
     private ServiceAdapter mServiceAdapter;
-    private boolean subMenuExpanded = false;
     private boolean userServicesOnly = false;
 
 
@@ -78,8 +76,7 @@ public class ServiceListActivity extends AppCompatActivity {
 
 
         mServicesListView = findViewById(R.id.service_list_view);
-        mAddServiceLayout = findViewById(R.id.layout_add_service);
-        mNewGroupLayout = findViewById(R.id.layout_new_group);
+        //mAddServiceLayout = findViewById(R.id.layout_add_service);
         mServiceSwitch = findViewById(R.id.service_switch);
 
         mServices = new ArrayList<>();
@@ -87,7 +84,6 @@ public class ServiceListActivity extends AppCompatActivity {
         mUserServices = new ArrayList<>();
 
 
-        if(mCurrentUser.getIsOwner().equals(true))
         mServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -105,34 +101,24 @@ public class ServiceListActivity extends AppCompatActivity {
             }
         });
 
-        mFAB = findViewById(R.id.main_fab);
+        mFAB = findViewById(R.id.fab_add_service);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (subMenuExpanded) {
-                    closeSubMenu();
-                } else {
-                    openSubMenu();
-                }
-            }
-        });
-
-        FloatingActionButton addServiceFab = findViewById(R.id.fab_add_service);
-        addServiceFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent intent = new Intent(ServiceListActivity.this, NewServiceActivity.class);
                 startActivity(intent);
             }
         });
+
+
 /*
-        FloatingActionButton newGroupFab = findViewById(R.id.fab_new_group);
-        newGroupFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ServiceListActivity.this, ServiceListActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton addServiceFab = findViewById(R.id.fab_add_service);
+        addServiceFab.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+           Intent intent = new Intent(ServiceListActivity.this, NewServiceActivity.class);
+           startActivity(intent);
+        }
         });
 */
         mServicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -190,7 +176,6 @@ public class ServiceListActivity extends AppCompatActivity {
 
         });
 
-        closeSubMenu();
     }
 
     @Override
@@ -228,11 +213,7 @@ public class ServiceListActivity extends AppCompatActivity {
                     }
                 }
 
-                for (Service service : mServices) {
-                    if (service.getAssignedUsers().contains(mCurrentUser.getId())) {
-                        mUserServices.add(service);
-                    }
-                }
+
             }
 
             @Override
@@ -245,12 +226,6 @@ public class ServiceListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-    }
-
-    @Override
-    protected void onPostResume() {
-        closeSubMenu();
-        super.onPostResume();
     }
 
     @Override
@@ -272,7 +247,7 @@ public class ServiceListActivity extends AppCompatActivity {
     }
 
     private void deleteService(Service service) {
-        for (String deleteId : service.getAssignedUsers()) {
+        for (String deleteId : service.getAssignedPS()) {
             for (User user : mUsers) {
                 if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
                     List<String> assignedServices = user.getAssignedServices();
@@ -287,18 +262,7 @@ public class ServiceListActivity extends AppCompatActivity {
 
 
 
-    private void openSubMenu() {
-        mAddServiceLayout.setVisibility(View.VISIBLE);
-        mNewGroupLayout.setVisibility(View.VISIBLE);
-        mFAB.setImageResource(R.drawable.cancel);
-        subMenuExpanded = true;
-    }
-    private void closeSubMenu() {
-        mAddServiceLayout.setVisibility(View.INVISIBLE);
-        mNewGroupLayout.setVisibility(View.INVISIBLE);
-        mFAB.setImageResource(R.drawable.add);
-        subMenuExpanded = false;
-    }
+
 
 
 

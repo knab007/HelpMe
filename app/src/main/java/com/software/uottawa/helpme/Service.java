@@ -18,10 +18,8 @@ public class Service {
     private String mCreatorId;
     private String mCreatorName;
     private String mDescription;
-    private String mStatus;
-    private String mRes;
     private String mHourlyRate;
-    private List<String> mAssignedUsers;
+    private List<String> mAssignedPS;
     private List<String> mRessources;
     private String mInstruction;
 
@@ -92,34 +90,18 @@ public class Service {
         mDescription = description;
     }
 
-    public String getRes() {
-        return mRes;
-    }
-
-    public void setRes(String res) {
-        mRes = res;
-    }
-
     public String getRate(){ return mHourlyRate; }
 
     public void setRate(String HourlyRate){
         mHourlyRate = HourlyRate;
     }
 
-    public String getStatus() {
-        return mStatus;
+    public List<String> getAssignedPS() {
+        return mAssignedPS;
     }
 
-    public void setStatus(String status) {
-        mStatus = status;
-    }
-
-    public List<String> getAssignedUsers() {
-        return mAssignedUsers;
-    }
-
-    public void setAssignedUsers(List<String> assignedUsers) {
-        mAssignedUsers = assignedUsers;
+    public void setAssignedPS(List<String> assignedPS) {
+        mAssignedPS = assignedPS;
     }
 
     public List<String> getRessources() {

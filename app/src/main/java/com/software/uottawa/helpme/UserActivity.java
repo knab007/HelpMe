@@ -36,8 +36,7 @@ public class UserActivity extends AppCompatActivity {
     private TextView mNameTextView;
     private TextView mEmailTextView;
     private TextView mPoints;
-    private TextView mFamily;
-    private TextView mIsOwner;
+    private TextView mTypeOfUserView;
 
     private Button mSignout;
     @Override
@@ -53,8 +52,8 @@ public class UserActivity extends AppCompatActivity {
 
         mNameTextView = (TextView) findViewById(R.id.user_name);
         mEmailTextView = (TextView) findViewById(R.id.user_email);
+        mTypeOfUserView = (TextView) findViewById(R.id.typeOfUser);
         mPoints = (TextView) findViewById(R.id.user_points);
-        mIsOwner = (TextView) findViewById(R.id.isOwner);
 
         //TODO CHANGE WHERE IS THE DISCONNECTED FUNCTION  TO PLACE IT IN THE MENU
         mSignout.setOnClickListener(new View.OnClickListener() {
@@ -82,17 +81,11 @@ public class UserActivity extends AppCompatActivity {
                 String name = user.getFirstName() + " " + user.getLastName();
                 String email = user.getEmail();
                 int points = user.getPoints();
-                Boolean isOwner = user.getIsOwner();
 
                 mNameTextView.setText(name);//check the name of this user
                 mEmailTextView.setText(email);//check the email of this user
                 mPoints.setText(String.valueOf(points));//Check point of this user
                 //check if the user is Parent or Child
-                if( isOwner == true){
-                    mIsOwner.setText("Parent");
-                } else {
-                    mIsOwner.setText("Child");
-                }
 
             }
             //TODO maybe catch some exception that can be happen if when we change the format of the databse

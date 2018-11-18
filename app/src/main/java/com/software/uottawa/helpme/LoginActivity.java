@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference ref;
+    DatabaseReference mDatabaseUsers;
     FirebaseUser fireUser;
 
     private EditText mEmailField;
@@ -47,11 +47,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         mAuth = FirebaseAuth.getInstance();
-      database = FirebaseDatabase.getInstance();
-      ref = database.getReference("users");
-      fireUser = mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        mDatabaseUsers = database.getReference("users");
+        fireUser = mAuth.getCurrentUser();
 
         /* INIT */
 
@@ -95,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordField.addTextChangedListener(textWatcher);
     }
 
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -109,30 +108,35 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
+*/
     private void login() {
         if (validateForm()) {
             String password = mPasswordField.getText().toString();
             String email = mEmailField.getText().toString();
+
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete (@NonNull Task < AuthResult > task) {
-                if (task.isSuccessful()) {
-                    //   updateUI();
-
-
-                    ref.child(fireUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                //   updateUI();
+                if (task.isSuccessful())
+                    mDatabaseUsers.child(fireUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            User myUser = dataSnapshot.getValue(User.class);
+                            User user = dataSnapshot.getValue(User.class);
 
-                            if (myUser.getTypeOfUser() "ADMIN") {
-                                Intent AdmintActivtuy
+                            if (user.getTypeOfUser() == "ADMIN") {
+                                Intent intentAdmin = new Intent(LoginActivity.this, ServiceListActivity.class);
+                                startActivity(intentAdmin);
+                                finish();
 
-                            } else if (myUser.getTypeOfUser() == "SP") {
-                                startSer
+                            } else if (user.getTypeOfUser() == "SP") {
+                                Intent intentSP = new Intent(LoginActivity.this, ServiceListActivity.class);
+                                startActivity(intentSP);
+                                finish();
                             } else {
-                                homeosever
+                                Intent intentHomeOwner = new Intent(LoginActivity.this, ServiceListActivity.class);
+                                startActivity(intentHomeOwner);
+                                finish();
                             }
 
                         }
@@ -143,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-                } else {
+                else {
                     mEmailLayout.setError("Incorrect Email or Password");
                     mPasswordLayout.setError("Incorrect Email or Password");
                 }

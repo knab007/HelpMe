@@ -57,27 +57,10 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
         ImageView serviceIcon = rowView.findViewById(R.id.service_icon);
         TextView serviceTitle = rowView.findViewById(R.id.service_title);
         TextView serviceDescription = rowView.findViewById(R.id.service_description);
-        CheckBox checkBox = rowView.findViewById(R.id.checkbox);
 
         serviceIcon.setImageResource(R.drawable.service_icon);
         serviceTitle.setText(service.getTitle());
         serviceDescription.setText(service.getDescription());
-        checkBox.setChecked(service.getStatus().equals("complete"));
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String serviceId = service.getId();
-                DatabaseReference dR = mDatabaseServices.child(serviceId);
-                if (isChecked) {
-                    mDatabaseServices.child(serviceId).child("status").setValue("complete");
-                    mDatabaseUsers.child(mUserId).child("points").setValue(mUserPoints + 1);
-
-                } else {
-                    dR.child("status").setValue("incomplete");
-                    mDatabaseUsers.child(mUserId).child("points").setValue(mUserPoints - 1);
-                }
-            }
-        });
 
         mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override

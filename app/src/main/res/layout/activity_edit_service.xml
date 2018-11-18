@@ -1,6 +1,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -80,65 +81,13 @@
     </android.support.design.widget.TextInputLayout>
 
 
-
-    <RadioGroup
-        android:id="@+id/edit_status_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_due_hourly_rate_layout">
-
-        <RadioButton
-            android:id="@+id/edit_radio_incomplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Incomplet"/>
-
-        <RadioButton
-            android:id="@+id/edit_radio_in_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="En cours"/>
-
-        <RadioButton
-            android:id="@+id/edit_radio_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Complete"/>
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/edit_res_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_status_radio_group">
-
-        <RadioButton
-            android:id="@+id/edit_radio_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Money"/>
-
-        <RadioButton
-            android:id="@+id/edit_radio_clean"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cleaning Kit"/>
-    </RadioGroup>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_res_radio_group">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="310dp">
 
         <Button
             android:id="@+id/edit_btn_assign_resources"
@@ -152,7 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select user" />
+            android:text="Assign       It"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/btn_del_service"

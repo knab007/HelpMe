@@ -30,9 +30,10 @@
         android:id="@+id/service_description_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:errorEnabled="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/service_name_layout">
 
         <EditText
@@ -71,62 +72,19 @@
             android:id="@+id/service_hourly_rate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:hint="@string/hint_date"
-            android:inputType="date" />
+            android:layout_weight="1"
+            android:hint="@string/hint_hourly_rate" />
+
     </android.support.design.widget.TextInputLayout>
-
-    <RadioGroup
-        android:id="@+id/status_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/service_hourly_rate_layout">
-
-        <RadioButton
-            android:id="@+id/radio_incomplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_I"/>
-
-        <RadioButton
-            android:id="@+id/radio_in_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_EC"/>
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/res_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/status_radio_group">
-
-        <RadioButton
-            android:id="@+id/radio_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Money"/>
-
-        <RadioButton
-            android:id="@+id/radio_clean"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cleaning Kit"/>
-    </RadioGroup>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/res_radio_group">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="278dp"
+        tools:ignore="MissingConstraints">
 
         <Button
             android:id="@+id/btn_add_resources"
@@ -136,19 +94,8 @@
             android:text="Select ressource"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_assign_user" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/btn_assign_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Select user"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/status_radio_group" />
 
         <Button
             android:id="@+id/btn_saved"

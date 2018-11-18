@@ -236,29 +236,6 @@ public class ViewServiceActivity extends AppCompatActivity {
         mServiceInstruction.setText(mService.getInstruction());
         mServiceHourlyRate.setText(mService.getRate());
 
-        switch (mService.getStatus()) {
-            case "incomplete":
-                mRadioGroup.check(R.id.edit_radio_incomplete);
-                break;
-            case "in progress":
-                mRadioGroup.check(R.id.edit_radio_in_progress);
-                break;
-            case "complete":
-                mRadioGroup.check(R.id.edit_radio_complete);
-                break;
-            default:
-                break;
-        }
-        switch (mService.getRes()){
-            case "Money":
-                mServiceRes.check(R.id.edit_radio_money);
-                break;
-            case "Cleaning Kit":
-                mServiceRes.check(R.id.edit_radio_clean);
-                break;
-            default:
-                break;
-        }
     }
 
 

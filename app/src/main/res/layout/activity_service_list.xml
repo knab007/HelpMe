@@ -45,6 +45,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/fab_sub_menu"/>
+    <include layout="@layout/fab_sub_menu" />
 
 </android.support.design.widget.CoordinatorLayout>

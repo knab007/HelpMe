@@ -15,10 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class EditServiceActivity extends AppCompatActivity {
@@ -54,8 +51,6 @@ public class EditServiceActivity extends AppCompatActivity {
     private TextInputLayout mServiceDescLayout;
     private TextInputLayout mServiceInstructionLayout;
     private TextInputLayout mServiceHourlyRateLayout;
-    private RadioGroup mRadioGroup;
-    private RadioGroup mServiceRes;
     private Button mBtnAssignUser;
     private Button mBtnAssignResources;
     private Button mBtnDelService;
@@ -83,12 +78,6 @@ public class EditServiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_service);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-
         extraServiceId = getIntent().getStringExtra(EXTRA_SERVICE_ID);
 
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
@@ -103,8 +92,7 @@ public class EditServiceActivity extends AppCompatActivity {
         mServiceDescLayout = findViewById(R.id.edit_service_description_layout);
         mServiceInstructionLayout = findViewById(R.id.edit_service_instruction_layout);
         mServiceHourlyRateLayout = findViewById(R.id.edit_due_hourly_rate_layout);
-        mRadioGroup = findViewById(R.id.edit_status_radio_group);
-        mServiceRes = findViewById(R.id.edit_res_radio_group);
+
         mBtnAssignUser = findViewById(R.id.edit_btn_assign_user);
         mBtnDelService = findViewById(R.id.btn_del_service);
         mBtnSaveService = findViewById(R.id.btn_save_service);
@@ -115,7 +103,7 @@ public class EditServiceActivity extends AppCompatActivity {
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] resources = {"Cleaning Kit", "Car", "Axe", "Ball", "Cellphone", "Pencil", "Money", "Food"};//TODO same list as the EditServiceAcitivity
+                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceAcitivity
                 mDialogAssignResourcesView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_resources, null);
                 mResourcesListView = mDialogAssignResourcesView.findViewById(R.id.resourcesListView);
                 mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -129,7 +117,7 @@ public class EditServiceActivity extends AppCompatActivity {
 
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
-                builder.setTitle("Assign Reources")
+                builder.setTitle("Assign Resources")
                         .setView(mDialogAssignResourcesView)
                         .setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -160,113 +148,84 @@ public class EditServiceActivity extends AppCompatActivity {
             }
         });
 
-        mServiceHourlyRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View dialogDatePicker = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_date_picker, null);
-                final DatePicker datePicker = dialogDatePicker.findViewById(R.id.date_picker);
-                datePicker.init(year, month, day, null);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
-                builder.setTitle("Set Due Date")
-                        .setView(dialogDatePicker)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                int year = datePicker.getYear();
-                                int month = datePicker.getMonth() + 1;
-                                int day = datePicker.getDayOfMonth();
-                                String date = String.format("%s/%s/%s", day, month, year);
-                                mServiceHourlyRate.setText(date);
-
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
-            }
-        });
 
         mBtnAssignUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<String> userNames = new ArrayList<>();
-                for (User user : mUsers) {
-                    String name = user.getFirstName() + " " + user.getLastName();
-                    userNames.add(name);
-                }
 
-                mDialogAssignView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_user, null);
-                mUserListView = mDialogAssignView.findViewById(R.id.users_list_view);
-                mUserListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                if (mUser.getTypeOfUser() == "SP") {
 
-                ArrayAdapter adapter = new ArrayAdapter<>(EditServiceActivity.this, android.R.layout.simple_list_item_multiple_choice, userNames);
-                mUserListView.setAdapter(adapter);
-
-                if (mCheckedUsers != null) {
-                    for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
-                        mUserListView.setItemChecked(i, mCheckedUsers.get(i));
+                    List<String> userNames = new ArrayList<>();
+                    for (User user : mUsers) {
+                        String name = user.getFirstName() + " " + user.getLastName();
+                        userNames.add(name);
                     }
-                }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
-                builder.setTitle("Assign Users")
-                        .setView(mDialogAssignView)
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mAssignedUserIds.clear();
-                                mCheckedUsers = mUserListView.getCheckedItemPositions();
-                                for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
-                                    if (mCheckedUsers.get(i)) {
-                                        mAssignedUserIds.add(mUsers.get(i).getId());
-                                    }
+                    mDialogAssignView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_user, null);
+                    mUserListView = mDialogAssignView.findViewById(R.id.users_list_view);
+                    mUserListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+                    ArrayAdapter adapter = new ArrayAdapter<>(EditServiceActivity.this, android.R.layout.simple_list_item_multiple_choice, userNames);
+                    mUserListView.setAdapter(adapter);
+
+                    if (mCheckedUsers != null) {
+                        for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
+                            mUserListView.setItemChecked(i, mCheckedUsers.get(i));
+                        }
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
+                    builder.setTitle("Assign Providers").setView(mDialogAssignView).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAssignedUserIds.clear();
+                            mCheckedUsers = mUserListView.getCheckedItemPositions();
+                            for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
+                                if (mCheckedUsers.get(i)) {
+                                    mAssignedUserIds.add(mUsers.get(i).getId());
                                 }
                             }
-                        })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mAssignedUserIds.clear();
-                                if (mCheckedUsers != null) {
-                                    mCheckedUsers.clear();
-                                }
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAssignedUserIds.clear();
+                            if (mCheckedUsers != null) {
+                                mCheckedUsers.clear();
                             }
-                        })
-                        .show();
+                        }
+                    }).show();
+                }
             }
+
         });
 
         mBtnDelService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
-                mServiceName.setText(mService.getTitle());
-                mServiceDescription.setText(mService.getDescription());
-                mServiceInstruction.setText(mService.getInstruction());
 
-                AlertDialog.Builder builder;
-                builder = new AlertDialog.Builder(EditServiceActivity.this);
-                builder.setTitle("Delete service?")
-                        .setMessage("Are you sure you want to delete service?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteService(mService);
-                                Toast.makeText(EditServiceActivity.this, "Service Deleted!", Toast.LENGTH_SHORT).show();
-                                startActivity(goBack);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
+                if (mUser.getTypeOfUser() == "ADMIN") {
+
+                    final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
+                    mServiceName.setText(mService.getTitle());
+                    mServiceDescription.setText(mService.getDescription());
+                    mServiceInstruction.setText(mService.getInstruction());
+                    mServiceHourlyRate.setText(mService.getRate());
+                    AlertDialog.Builder builder;
+                    builder = new AlertDialog.Builder(EditServiceActivity.this);
+                    builder.setTitle("Delete service?").setMessage("Are you sure you want to delete service?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteService(mService);
+                            Toast.makeText(EditServiceActivity.this, "Service Deleted!", Toast.LENGTH_SHORT).show();
+                            startActivity(goBack);
+                        }
+                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    }).show();
+                }
             }
-
         });
 
         mBtnSaveService.setOnClickListener(new View.OnClickListener() {
@@ -288,7 +247,7 @@ public class EditServiceActivity extends AppCompatActivity {
             mServiceName.setFocusable(true);
             mServiceDescription.setFocusable(true);
             mServiceInstruction.setFocusable(true);
-            mServiceHourlyRate.setFocusable(false);
+            mServiceHourlyRate.setFocusable(true);
         }
 
         TextWatcher textWatcher = new TextWatcher() {
@@ -365,29 +324,7 @@ public class EditServiceActivity extends AppCompatActivity {
         mServiceInstruction.setText(mService.getInstruction());
         mServiceHourlyRate.setText(mService.getRate());
 
-        switch (mService.getStatus()) {
-            case "incomplete":
-                mRadioGroup.check(R.id.edit_radio_incomplete);
-                break;
-            case "in progress":
-                mRadioGroup.check(R.id.edit_radio_in_progress);
-                break;
-            case "complete":
-                mRadioGroup.check(R.id.edit_radio_complete);
-                break;
-            default:
-                break;
-        }
-        switch (mService.getRes()){
-            case "Money":
-                mServiceRes.check(R.id.edit_radio_money);
-                break;
-            case "Cleaning Kit":
-                mServiceRes.check(R.id.edit_radio_clean);
-                break;
-            default:
-                break;
-        }
+
     }
 
 
@@ -398,50 +335,14 @@ public class EditServiceActivity extends AppCompatActivity {
         int userPoints = mUser.getPoints();
 
         String serviceId = mService.getId();
-        List<String> existingAssignees = mService.getAssignedUsers();
+        List<String> existingAssignees = mService.getAssignedPS();
 
         String name = mServiceName.getText().toString();
         String description = mServiceDescription.getText().toString();
         String instruction = mServiceInstruction.getText().toString();
         String hourly_rate = mServiceHourlyRate.getText().toString();
         String status = "";
-        String oldStatus = mService.getStatus();
         String res = "";
-        String oldRes = mService.getRes();
-
-        switch (mRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.edit_radio_incomplete:
-                status = "incomplete";
-                if (oldStatus.equals("complete")) {
-                    mDatabaseUsers.child(userId).child("points").setValue(userPoints - 1);
-                }
-                break;
-            case R.id.edit_radio_in_progress:
-                status = "in progress";
-                if (oldStatus.equals("complete")) {
-                    mDatabaseUsers.child(userId).child("points").setValue(userPoints - 1);
-                }
-                break;
-            case R.id.edit_radio_complete:
-                status = "complete";
-                if (oldStatus.equals("incomplete") || oldStatus.equals("in progress")) {
-                    mDatabaseUsers.child(userId).child("points").setValue(userPoints + 1);
-                }
-                break;
-            default:
-                break;
-        }
-        switch(mServiceRes.getCheckedRadioButtonId()){
-            case R.id.edit_radio_money:
-                res = "Money";
-                break;
-            case R.id.edit_radio_clean:
-                res = "Cleaning Kit";
-                break;
-            default:
-                break;
-
-        }
 
 
         String creator = mService.getCreatorId();
@@ -452,13 +353,11 @@ public class EditServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourly_rate);
-        service.setStatus(status);
-        service.setRes(res);
         service.setRessources(mAssignedResources);
         if (mAssignedUserIds.isEmpty()) {
-            service.setAssignedUsers(mService.getAssignedUsers());
+            service.setAssignedPS(mService.getAssignedPS());
         } else {
-            service.setAssignedUsers(mAssignedUserIds);
+            service.setAssignedPS(mAssignedUserIds);
         }
         service.setCreatorId(creator);
 
@@ -500,7 +399,7 @@ public class EditServiceActivity extends AppCompatActivity {
     }
 
     private void deleteService(Service service) {
-        for (String deleteId : service.getAssignedUsers()) {
+        for (String deleteId : service.getAssignedPS()) {
             for (User user : mUsers) {
                 if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
                     List<String> assignedServices = user.getAssignedServices();

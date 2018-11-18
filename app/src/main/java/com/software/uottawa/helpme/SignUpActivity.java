@@ -117,9 +117,9 @@ public class SignUpActivity extends AppCompatActivity {
                         User user = new User(id, firstName, lastName, email, typeOfUser);
                         mDatabaseUsers.child(id).setValue(user);
 
-                        //Send user to task list
-                        Intent sendToCurrentTaskList = new Intent(SignUpActivity.this, ServiceListActivity.class);
-                        startActivity(sendToCurrentTaskList);
+                        //Send user to service list
+                        Intent sendToCurrentServiceList = new Intent(SignUpActivity.this, ServiceListActivity.class);
+                        startActivity(sendToCurrentServiceList);
                         Toast.makeText(SignUpActivity.this,firstName + " is now connected!", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
