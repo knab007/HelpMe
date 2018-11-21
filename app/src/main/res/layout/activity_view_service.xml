@@ -76,7 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_due_hourly_rate_layout"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <RadioButton
             android:id="@+id/edit_radio_incomplete"
@@ -102,20 +103,21 @@
         android:id="@+id/edit_res_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/edit_status_radio_group"
         android:orientation="horizontal"
-        android:layout_below="@id/edit_status_radio_group">
+        android:visibility="gone">
 
         <RadioButton
             android:id="@+id/edit_radio_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Money"/>
+            android:text="Money" />
 
         <RadioButton
             android:id="@+id/edit_radio_clean"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cleaning Kit"/>
+            android:text="Cleaning Kit" />
     </RadioGroup>
 
     <ListView

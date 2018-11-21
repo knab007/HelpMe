@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 //Login FORM based on https://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference mDatabaseUsers;
     FirebaseUser fireUser;
@@ -41,16 +41,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+        System.out.println("mauthhhhhh"+mAuth);
         database = FirebaseDatabase.getInstance();
         mDatabaseUsers = database.getReference("users");
-        fireUser = mAuth.getCurrentUser();
+        //fireUser = mAuth.getCurrentUser();
 
         /* INIT */
 
@@ -94,32 +93,37 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordField.addTextChangedListener(textWatcher);
     }
 
-   /* @Override
+    @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            updateUI();
-        }
+        fireUser = mAuth.getCurrentUser();
+        System.out.println("ONSTARRrrrrT"+ fireUser);
+      //  if (currentUser != null) {
+        //    updateUI();
+        //}
     }
 
-    private void updateUI() {
-        Intent intent = new Intent(LoginActivity.this, ServiceListActivity.class);
-        startActivity(intent);
-        finish();
-    }
-*/
+    //private void updateUI() {
+      //  Intent intent = new Intent(LoginActivity.this, ServiceListActivity.class);
+        //startActivity(intent);
+        //finish();
+    //}
+
     private void login() {
         if (validateForm()) {
             String password = mPasswordField.getText().toString();
             String email = mEmailField.getText().toString();
-
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete (@NonNull Task < AuthResult > task) {
                 //   updateUI();
+                fireUser = mAuth.getCurrentUser();
+                System.out.println(task.isSuccessful());
+                System.out.println(fireUser);
                 if (task.isSuccessful())
+
                     mDatabaseUsers.child(fireUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user = dataSnapshot.getValue(User.class);

@@ -80,10 +80,12 @@ public class UserActivity extends AppCompatActivity {
 
                 String name = user.getFirstName() + " " + user.getLastName();
                 String email = user.getEmail();
+                String type = user.getTypeOfUser();
                 int points = user.getPoints();
 
                 mNameTextView.setText(name);//check the name of this user
                 mEmailTextView.setText(email);//check the email of this user
+                mTypeOfUserView.setText(type);
                 mPoints.setText(String.valueOf(points));//Check point of this user
                 //check if the user is Parent or Child
 

@@ -58,7 +58,8 @@ public class EditServiceActivity extends AppCompatActivity {
     private View mDialogAssignResourcesView;
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
-    private List<String> mAssignedResources;
+    //private List<String> mAssignedResources;
+    private String mResource = "Default";
     private SparseBooleanArray mCheckedResources;
 
     private ListView mUserListView;
@@ -98,16 +99,16 @@ public class EditServiceActivity extends AppCompatActivity {
         mBtnSaveService = findViewById(R.id.btn_save_service);
 
         //Assigning Resources
-        mAssignedResources = new ArrayList<>();
+        //mAssignedResources = new ArrayList<>();
         mBtnAssignResources = findViewById(R.id.edit_btn_assign_resources);
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceAcitivity
+                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceActivity
                 mDialogAssignResourcesView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_resources, null);
                 mResourcesListView = mDialogAssignResourcesView.findViewById(R.id.resourcesListView);
-                mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                mResourcesListAdapter =new ArrayAdapter<String>(EditServiceActivity.this, android.R.layout.simple_list_item_multiple_choice, resources);
+                mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                mResourcesListAdapter =new ArrayAdapter<String>(EditServiceActivity.this, android.R.layout.simple_list_item_single_choice, resources);
                 mResourcesListView.setAdapter(mResourcesListAdapter);
                 if(mCheckedResources != null){
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
@@ -117,7 +118,7 @@ public class EditServiceActivity extends AppCompatActivity {
 
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
-                builder.setTitle("Assign Resources")
+                builder.setTitle("Assign Resource")
                         .setView(mDialogAssignResourcesView)
                         .setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -126,7 +127,8 @@ public class EditServiceActivity extends AppCompatActivity {
                                 mCheckedResources = mResourcesListView.getCheckedItemPositions();
                                 for(int i =0; i< mCheckedResources.size()+1 ; i++){
                                     if(mCheckedResources.get(i)){
-                                        mAssignedResources.add(resources[i]);
+                                        //mAssignedResources.add(resources[i]);
+                                        mResource = resources[i];
                                     }
 
 
@@ -136,7 +138,7 @@ public class EditServiceActivity extends AppCompatActivity {
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mAssignedResources.clear();
+                                //mAssignedResources.clear();
                                 if(mCheckedResources != null){
                                     mCheckedResources.clear();
                                 }
@@ -153,50 +155,13 @@ public class EditServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mUser.getTypeOfUser() == "SP") {
+                //if (mUser.getTypeOfUser() == "SP") {
+                    mAssignedUserIds.add(mUser.getId());
+                    Toast.makeText(EditServiceActivity.this, "Service assigned to you!", Toast.LENGTH_SHORT).show();
 
-                    List<String> userNames = new ArrayList<>();
-                    for (User user : mUsers) {
-                        String name = user.getFirstName() + " " + user.getLastName();
-                        userNames.add(name);
-                    }
-
-                    mDialogAssignView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_user, null);
-                    mUserListView = mDialogAssignView.findViewById(R.id.users_list_view);
-                    mUserListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-                    ArrayAdapter adapter = new ArrayAdapter<>(EditServiceActivity.this, android.R.layout.simple_list_item_multiple_choice, userNames);
-                    mUserListView.setAdapter(adapter);
-
-                    if (mCheckedUsers != null) {
-                        for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
-                            mUserListView.setItemChecked(i, mCheckedUsers.get(i));
-                        }
-                    }
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditServiceActivity.this);
-                    builder.setTitle("Assign Providers").setView(mDialogAssignView).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mAssignedUserIds.clear();
-                            mCheckedUsers = mUserListView.getCheckedItemPositions();
-                            for (int i = 0; i < mCheckedUsers.size() + 1; i++) {
-                                if (mCheckedUsers.get(i)) {
-                                    mAssignedUserIds.add(mUsers.get(i).getId());
-                                }
-                            }
-                        }
-                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mAssignedUserIds.clear();
-                            if (mCheckedUsers != null) {
-                                mCheckedUsers.clear();
-                            }
-                        }
-                    }).show();
                 }
-            }
+
+           // }
 
         });
 
@@ -204,7 +169,7 @@ public class EditServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mUser.getTypeOfUser() == "ADMIN") {
+                //if (mUser.getTypeOfUser() == "ADMIN") {
 
                     final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
                     mServiceName.setText(mService.getTitle());
@@ -224,7 +189,7 @@ public class EditServiceActivity extends AppCompatActivity {
                             // do nothing
                         }
                     }).show();
-                }
+                //}
             }
         });
 
@@ -302,10 +267,11 @@ public class EditServiceActivity extends AppCompatActivity {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    mUsers.add(user);
-                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                        mUser = user;
-                    }
+                        mUsers.add(user);
+                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                            mUser = user;
+                        }
+
                 }
             }
 
@@ -335,7 +301,7 @@ public class EditServiceActivity extends AppCompatActivity {
         int userPoints = mUser.getPoints();
 
         String serviceId = mService.getId();
-        List<String> existingAssignees = mService.getAssignedPS();
+        List<String> existingAssignees = mService.getAssignedUsers();
 
         String name = mServiceName.getText().toString();
         String description = mServiceDescription.getText().toString();
@@ -353,11 +319,11 @@ public class EditServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourly_rate);
-        service.setRessources(mAssignedResources);
+        service.setResource(mResource);
         if (mAssignedUserIds.isEmpty()) {
-            service.setAssignedPS(mService.getAssignedPS());
+            service.setAssignedUsers(mService.getAssignedUsers());
         } else {
-            service.setAssignedPS(mAssignedUserIds);
+            service.setAssignedUsers(mAssignedUserIds);
         }
         service.setCreatorId(creator);
 
@@ -368,30 +334,34 @@ public class EditServiceActivity extends AppCompatActivity {
 
     private void updateAssignedUsers(List<String> existingAssignees, String serviceId) {
 
-        for (String assignId : mAssignedUserIds) {
-            if (!existingAssignees.contains(assignId)) {
-                for (User user : mUsers) {
-                    if (user.getId().equals(assignId)) {
-                        List<String> assignedServices = new ArrayList<>();
-                        if (user.getAssignedServices() != null) {
-                            assignedServices = user.getAssignedServices();
+        if (mAssignedUserIds != null) {
+            for (String assignId : mAssignedUserIds) {
+                if (!existingAssignees.contains(assignId)) {
+                    for (User user : mUsers) {
+                        if (user.getId().equals(assignId) && user.getTypeOfUser() == "SP") {
+                            List<String> assignedServices = new ArrayList<>();
+                            if (user.getAssignedServices() != null) {
+                                assignedServices = user.getAssignedServices();
+                            }
+                            assignedServices.add(serviceId);
+                            user.setAssignedServices(assignedServices);
+                            mDatabaseUsers.child(user.getId()).setValue(user);
                         }
-                        assignedServices.add(serviceId);
-                        user.setAssignedServices(assignedServices);
-                        mDatabaseUsers.child(user.getId()).setValue(user);
                     }
                 }
             }
         }
 
-        for (String deleteId : existingAssignees) {
-            if (!mAssignedUserIds.contains(deleteId)) {
-                for (User user : mUsers) {
-                    if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
-                        List<String> assignedServices = user.getAssignedServices();
-                        assignedServices.remove(serviceId);
-                        user.setAssignedServices(assignedServices);
-                        mDatabaseUsers.child(user.getId()).setValue(user);
+        if (existingAssignees != null) {
+            for (String deleteId : existingAssignees) {
+                if (!mAssignedUserIds.contains(deleteId)) {
+                    for (User user : mUsers) {
+                        if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
+                            List<String> assignedServices = user.getAssignedServices();
+                            assignedServices.remove(serviceId);
+                            user.setAssignedServices(assignedServices);
+                            mDatabaseUsers.child(user.getId()).setValue(user);
+                        }
                     }
                 }
             }
@@ -399,13 +369,16 @@ public class EditServiceActivity extends AppCompatActivity {
     }
 
     private void deleteService(Service service) {
-        for (String deleteId : service.getAssignedPS()) {
-            for (User user : mUsers) {
-                if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
-                    List<String> assignedServices = user.getAssignedServices();
-                    assignedServices.remove(service.getId());
-                    user.setAssignedServices(assignedServices);
-                    mDatabaseUsers.child(user.getId()).setValue(user);
+
+        if ((service.getAssignedUsers() != null)) {
+            for (String deleteId : service.getAssignedUsers()) {
+                for (User user : mUsers) {
+                    if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
+                        List<String> assignedServices = user.getAssignedServices();
+                        assignedServices.remove(service.getId());
+                        user.setAssignedServices(assignedServices);
+                        mDatabaseUsers.child(user.getId()).setValue(user);
+                    }
                 }
             }
         }
@@ -438,10 +411,7 @@ public class EditServiceActivity extends AppCompatActivity {
             mServiceHourlyRateLayout.setError("Required Field");
             isValid = false;
         }
-        if (mAssignedUserIds.isEmpty()) {
-            Toast.makeText(EditServiceActivity.this, "Must assign at least 1 user", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
+
         return isValid;
     }
 }

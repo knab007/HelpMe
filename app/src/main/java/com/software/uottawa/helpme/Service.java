@@ -19,8 +19,11 @@ public class Service {
     private String mCreatorName;
     private String mDescription;
     private String mHourlyRate;
-    private List<String> mAssignedPS;
-    private List<String> mRessources;
+    private List<String> mAssignedUsers;
+
+
+    //private List<String> mRessources;
+    private String mResource;
     private String mInstruction;
 
     DatabaseReference databaseNotes;
@@ -96,20 +99,23 @@ public class Service {
         mHourlyRate = HourlyRate;
     }
 
-    public List<String> getAssignedPS() {
-        return mAssignedPS;
+    public List<String> getAssignedUsers() {
+        return mAssignedUsers;
     }
 
-    public void setAssignedPS(List<String> assignedPS) {
-        mAssignedPS = assignedPS;
+    public void setAssignedUsers(List<String> assignedUsers) {
+        mAssignedUsers = assignedUsers;
     }
 
-    public List<String> getRessources() {
+   /* public List<String> getRessources() {
         return mRessources;
     }
 
     public void setRessources(List<String> ressources) {
         mRessources = ressources;
-    }
+    }*/
+    public String getResource() { return mResource;   }
+
+    public void setResource(String resource) { this.mResource = resource;    }
 
 }

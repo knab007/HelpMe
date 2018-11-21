@@ -52,7 +52,8 @@ public class NewServiceActivity extends AppCompatActivity {
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
 
-    private List<String> mAssignedResources;
+    private String mResource = "Default";
+    //private List<String> mAssignedResources;
     private SparseBooleanArray mCheckedResources;
 
 
@@ -67,7 +68,7 @@ public class NewServiceActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         mServices = new ArrayList<>();
-        mAssignedResources = new ArrayList<>();
+        //mAssignedResources = new ArrayList<>();
 
         mServiceTitle = findViewById(R.id.service_name);
         mServiceDescription = findViewById(R.id.service_description);
@@ -123,11 +124,11 @@ public class NewServiceActivity extends AppCompatActivity {
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceAcitivity
+                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceActivity
                 mDialogAssignResourcesView = LayoutInflater.from(NewServiceActivity.this).inflate(R.layout.dialog_assign_resources, null);
                 mResourcesListView = mDialogAssignResourcesView.findViewById(R.id.resourcesListView);
-                mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                mResourcesListAdapter =new ArrayAdapter<String>(NewServiceActivity.this, android.R.layout.simple_list_item_multiple_choice, resources);
+                mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                mResourcesListAdapter =new ArrayAdapter<String>(NewServiceActivity.this, android.R.layout.simple_list_item_single_choice, resources);
                 mResourcesListView.setAdapter(mResourcesListAdapter);
                 if(mCheckedResources != null){
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
@@ -137,7 +138,7 @@ public class NewServiceActivity extends AppCompatActivity {
 
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(NewServiceActivity.this);
-                builder.setTitle("Ressources")
+                builder.setTitle("Assign Resource")
                         .setView(mDialogAssignResourcesView)
                         .setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -146,9 +147,9 @@ public class NewServiceActivity extends AppCompatActivity {
                                 mCheckedResources = mResourcesListView.getCheckedItemPositions();
                                 for(int i =0; i< mCheckedResources.size()+1 ; i++){
                                     if(mCheckedResources.get(i)){
-                                        mAssignedResources.add(resources[i]);
+                                        //mAssignedResources.add(resources[i]);
+                                        mResource = resources[i];
                                     }
-
 
                                 }
                             }
@@ -156,7 +157,7 @@ public class NewServiceActivity extends AppCompatActivity {
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mAssignedResources.clear();
+                                //mAssignedResources.clear();
                                 if(mCheckedResources != null){
                                     mCheckedResources.clear();
                                 }
@@ -205,7 +206,7 @@ public class NewServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourlyRate);
-        service.setRessources(mAssignedResources);
+        service.setResource(mResource);
         service.setCreatorId(mAuth.getCurrentUser().getUid());
 
         mDatabaseServices.child(serviceId).setValue(service);

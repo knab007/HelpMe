@@ -56,11 +56,11 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
 
         ImageView serviceIcon = rowView.findViewById(R.id.service_icon);
         TextView serviceTitle = rowView.findViewById(R.id.service_title);
-        TextView serviceDescription = rowView.findViewById(R.id.service_description);
+        TextView serviceResource = rowView.findViewById(R.id.service_resource);
 
         serviceIcon.setImageResource(R.drawable.service_icon);
         serviceTitle.setText(service.getTitle());
-        serviceDescription.setText(service.getDescription());
+        serviceResource.setText(service.getResource());
 
         mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override

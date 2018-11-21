@@ -59,10 +59,6 @@ public class ViewServiceActivity extends AppCompatActivity {
     private TextView mServiceInstruction;
     private TextView mServiceHourlyRate;
 
-    private RadioGroup mRadioGroup;
-    private RadioGroup mServiceRes;
-
-
     private String extraServiceId;
 
     public static Intent newIntent(Context packageContext, String serviceId) {
@@ -125,10 +121,6 @@ public class ViewServiceActivity extends AppCompatActivity {
         mServiceDescription = findViewById(R.id.edit_service_description);
         mServiceInstruction = findViewById(R.id.edit_service_instruction);
         mServiceHourlyRate = findViewById(R.id.edit_due_hourly_rate);
-        mRadioGroup = findViewById(R.id.edit_status_radio_group);
-        mServiceRes = findViewById(R.id.edit_res_radio_group);
-
-
 
 
         TextWatcher textWatcher = new TextWatcher() {
@@ -156,7 +148,6 @@ public class ViewServiceActivity extends AppCompatActivity {
 
     private void setSupportActionBar(Toolbar toolbar) {
     }
-
 
     @Override
     protected void onStart() {
@@ -206,16 +197,16 @@ public class ViewServiceActivity extends AppCompatActivity {
                     Note note = snap.getValue(Note.class);
                     //inst.add(note);
 
-                    if(note.getTacheId().equals(mService.getId())) {               // if note.tachedID != tacheID, on n'ajoute pas ces taches a feed ou inst
-                        if (note.getCreator().equals(mUser.getId())) {             // note a ete ecrit par le createur de la tache
-                            inst.add(note);                                        // add to inst
+                    if(note.getTacheId().equals(mService.getId())) {
+                        if (note.getCreator().equals(mUser.getId())) {
+                            inst.add(note);
                         } else {
-                            feed.add(note);                                 // note n'a pas ete ecrit par le createur de la tache
+                            feed.add(note);
                         }
                     }
                 }
 
-                NoteAdapter noteAdapter = new NoteAdapter(ViewServiceActivity.this, inst);         //Create adapter pour lse listviews
+                NoteAdapter noteAdapter = new NoteAdapter(ViewServiceActivity.this, inst);
                 listViewInst.setAdapter(noteAdapter);
                 NoteAdapter feedAdapter = new NoteAdapter(ViewServiceActivity.this, feed);// Display les listview
                 listViewFeed.setAdapter(feedAdapter);
@@ -239,8 +230,6 @@ public class ViewServiceActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -256,14 +245,6 @@ public class ViewServiceActivity extends AppCompatActivity {
         }
         return true;
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -330,14 +311,6 @@ public class ViewServiceActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
     // Handle adding notes
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -348,7 +321,6 @@ public class ViewServiceActivity extends AppCompatActivity {
             }
         }
     }
-
 
     protected void addNote(){
         Intent intent = new Intent(this, NoteActivity.class);

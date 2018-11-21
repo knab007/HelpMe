@@ -247,7 +247,7 @@ public class ServiceListActivity extends AppCompatActivity {
     }
 
     private void deleteService(Service service) {
-        for (String deleteId : service.getAssignedPS()) {
+        for (String deleteId : service.getAssignedUsers()) {
             for (User user : mUsers) {
                 if (user.getId().equals(deleteId) && user.getAssignedServices() != null) {
                     List<String> assignedServices = user.getAssignedServices();
