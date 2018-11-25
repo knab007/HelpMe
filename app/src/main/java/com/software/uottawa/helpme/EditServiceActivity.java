@@ -58,8 +58,9 @@ public class EditServiceActivity extends AppCompatActivity {
     private View mDialogAssignResourcesView;
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
-    //private List<String> mAssignedResources;
-    private String mResource = "Default";
+
+    private String defaultResource = "Default";
+    private String checkedResource;
     private SparseBooleanArray mCheckedResources;
 
     private ListView mUserListView;
@@ -95,12 +96,15 @@ public class EditServiceActivity extends AppCompatActivity {
         mServiceHourlyRateLayout = findViewById(R.id.edit_due_hourly_rate_layout);
 
         mBtnAssignUser = findViewById(R.id.edit_btn_assign_user);
+        mBtnAssignUser.setVisibility(View.GONE);
+
         mBtnDelService = findViewById(R.id.btn_del_service);
+        mBtnDelService.setVisibility(View.GONE);
+
         mBtnSaveService = findViewById(R.id.btn_save_service);
 
-        //Assigning Resources
-        //mAssignedResources = new ArrayList<>();
         mBtnAssignResources = findViewById(R.id.edit_btn_assign_resources);
+        mBtnAssignResources.setVisibility(View.GONE);
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +118,7 @@ public class EditServiceActivity extends AppCompatActivity {
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
                         mResourcesListView.setItemChecked(i, mCheckedResources.get(i));
 
+
                     }
 
                 }
@@ -125,10 +130,11 @@ public class EditServiceActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 mCheckedResources = mResourcesListView.getCheckedItemPositions();
-                                for(int i =0; i< mCheckedResources.size()+1 ; i++){
+                                for(int i =0; i<= mResourcesListView.getAdapter().getCount() ; i++){
                                     if(mCheckedResources.get(i)){
                                         //mAssignedResources.add(resources[i]);
-                                        mResource = resources[i];
+                                        checkedResource = resources[i];
+                                        updateResource(checkedResource);
                                     }
 
 
@@ -138,7 +144,6 @@ public class EditServiceActivity extends AppCompatActivity {
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //mAssignedResources.clear();
                                 if(mCheckedResources != null){
                                     mCheckedResources.clear();
                                 }
@@ -154,16 +159,13 @@ public class EditServiceActivity extends AppCompatActivity {
         mBtnAssignUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                  mAssignedUserIds.add(mUser.getId());
+                  Toast.makeText(EditServiceActivity.this, "Service assigned to you!", Toast.LENGTH_SHORT).show();
 
-                //if (mUser.getTypeOfUser() == "SP") {
-                    mAssignedUserIds.add(mUser.getId());
-                    Toast.makeText(EditServiceActivity.this, "Service assigned to you!", Toast.LENGTH_SHORT).show();
-
-                }
-
-           // }
-
+            }
         });
+
+
 
         mBtnDelService.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,24 +173,24 @@ public class EditServiceActivity extends AppCompatActivity {
 
                 //if (mUser.getTypeOfUser() == "ADMIN") {
 
-                    final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
-                    mServiceName.setText(mService.getTitle());
-                    mServiceDescription.setText(mService.getDescription());
-                    mServiceInstruction.setText(mService.getInstruction());
-                    mServiceHourlyRate.setText(mService.getRate());
-                    AlertDialog.Builder builder;
-                    builder = new AlertDialog.Builder(EditServiceActivity.this);
-                    builder.setTitle("Delete service?").setMessage("Are you sure you want to delete service?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteService(mService);
-                            Toast.makeText(EditServiceActivity.this, "Service Deleted!", Toast.LENGTH_SHORT).show();
-                            startActivity(goBack);
-                        }
-                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    }).show();
+                final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
+                mServiceName.setText(mService.getTitle());
+                mServiceDescription.setText(mService.getDescription());
+                mServiceInstruction.setText(mService.getInstruction());
+                mServiceHourlyRate.setText(mService.getRate());
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(EditServiceActivity.this);
+                builder.setTitle("Delete service?").setMessage("Are you sure you want to delete service?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteService(mService);
+                        Toast.makeText(EditServiceActivity.this, "Service Deleted!", Toast.LENGTH_SHORT).show();
+                        startActivity(goBack);
+                    }
+                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }).show();
                 //}
             }
         });
@@ -267,10 +269,19 @@ public class EditServiceActivity extends AppCompatActivity {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                        mUsers.add(user);
-                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                            mUser = user;
+                    mUsers.add(user);
+                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                        mUser = user;
+                        if (mUser.getTypeOfUser().equals("ADMIN")) {
+                            mBtnAssignResources.setVisibility(View.VISIBLE);
+                            mBtnDelService.setVisibility(View.VISIBLE);
                         }
+                        if (mUser.getTypeOfUser().equals("SP")) {
+                            mBtnAssignUser.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+
 
                 }
             }
@@ -319,7 +330,7 @@ public class EditServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourly_rate);
-        service.setResource(mResource);
+        service.setResource(defaultResource);
         if (mAssignedUserIds.isEmpty()) {
             service.setAssignedUsers(mService.getAssignedUsers());
         } else {
@@ -385,6 +396,9 @@ public class EditServiceActivity extends AppCompatActivity {
         mDatabaseServices.child(service.getId()).removeValue();
     }
 
+    private void updateResource (String defaultResource) {
+        this.defaultResource = defaultResource;
+    }
 
     private boolean isValidService() {
 
@@ -414,4 +428,8 @@ public class EditServiceActivity extends AppCompatActivity {
 
         return isValid;
     }
+
+
+
 }
+

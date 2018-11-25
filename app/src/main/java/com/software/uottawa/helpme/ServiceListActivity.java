@@ -3,18 +3,24 @@ package com.software.uottawa.helpme;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,16 +46,24 @@ public class ServiceListActivity extends AppCompatActivity {
     private List<Service> mServices;
     private List<User> mUsers;
     private List<Service> mUserServices;
-    private User mCurrentUser;
+    private User loggedInUser;
 
     private FloatingActionButton mFAB;
+
+    private FloatingActionButton mFAB2;
+    private View mDialogAssignDisponibilityView;
+    private ListView mDisponibilityListView;
+    private ArrayAdapter<String> mDisponibilityListAdapter;
+
+    private List<String> mAssignedDisponibility;
+    private SparseBooleanArray mCheckedDisponibility;
+
     private LinearLayout mAddServiceLayout;
     private Switch mServiceSwitch;
 
     private ListView mServicesListView;
     private ServiceAdapter mServiceAdapter;
     private boolean userServicesOnly = false;
-
 
 
 
@@ -78,10 +92,13 @@ public class ServiceListActivity extends AppCompatActivity {
         mServicesListView = findViewById(R.id.service_list_view);
         //mAddServiceLayout = findViewById(R.id.layout_add_service);
         mServiceSwitch = findViewById(R.id.service_switch);
+        mServiceSwitch.setVisibility(View.GONE);
 
         mServices = new ArrayList<>();
         mUsers = new ArrayList<>();
         mUserServices = new ArrayList<>();
+        //Assigning Disponibility
+        mAssignedDisponibility = new ArrayList<>();
 
 
         mServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -102,6 +119,7 @@ public class ServiceListActivity extends AppCompatActivity {
         });
 
         mFAB = findViewById(R.id.fab_add_service);
+        mFAB.setVisibility(View.GONE);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,8 +128,63 @@ public class ServiceListActivity extends AppCompatActivity {
             }
         });
 
+        mFAB2 = findViewById(R.id.fab_add_disponibility);
+        mFAB2.setVisibility(View.GONE);
 
-/*
+        getCurrentUser();
+
+
+         mFAB2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+                mDialogAssignDisponibilityView = LayoutInflater.from(ServiceListActivity.this).inflate(R.layout.dialog_assign_resources, null);
+                mDisponibilityListView = (ListView) mDialogAssignDisponibilityView.findViewById(R.id.resourcesListView);
+                mDisponibilityListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                mDisponibilityListAdapter =new ArrayAdapter<String>(ServiceListActivity.this, android.R.layout.simple_list_item_multiple_choice, days);
+                mDisponibilityListView.setAdapter(mDisponibilityListAdapter);
+                if(mCheckedDisponibility != null){
+                    for(int i = 0; i < mCheckedDisponibility.size() + 1; i++){
+                        mDisponibilityListView.setItemChecked(i, mCheckedDisponibility.get(i));
+
+                    }
+
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(ServiceListActivity.this);
+                builder.setTitle("Assign/update your days")
+                        .setView(mDialogAssignDisponibilityView)
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                mCheckedDisponibility = mDisponibilityListView.getCheckedItemPositions();
+                                for(int i = 0; i< mDisponibilityListView.getAdapter().getCount() ; i++){
+                                    if(mCheckedDisponibility.get(i)) {
+                                        mAssignedDisponibility.add(days[i]);
+                                    }
+                                }
+                                updateUser();
+
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mAssignedDisponibility.clear();
+                                if(mCheckedDisponibility != null){
+                                    mCheckedDisponibility.clear();
+                                }
+                            }
+                        })
+                        .show();
+
+
+            }
+        });
+
+        /*
         FloatingActionButton addServiceFab = findViewById(R.id.fab_add_service);
         addServiceFab.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -202,25 +275,13 @@ public class ServiceListActivity extends AppCompatActivity {
 
             }
         });
-        mDatabaseUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    mUsers.add(user);
-                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                        mCurrentUser = user;
-                    }
-                }
 
+    }
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    private void updateUser() {
+        loggedInUser.setDisponibility(mAssignedDisponibility);
+        mDatabaseUsers.child(loggedInUser.getId()).setValue(loggedInUser);
+        Toast.makeText(this, "User Updated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -261,8 +322,34 @@ public class ServiceListActivity extends AppCompatActivity {
     }
 
 
+    private void getCurrentUser() {
 
 
+        mDatabaseUsers.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                loggedInUser = dataSnapshot.getValue(User.class);
+                if (loggedInUser.getTypeOfUser().equals("ADMIN")) {
+                    mFAB.setVisibility(View.VISIBLE);
+                }
+                if (loggedInUser.getTypeOfUser().equals("SP")) {
+                    mFAB.setVisibility(View.VISIBLE);
+                    mFAB2.setVisibility(View.VISIBLE);
+                }
+                if (loggedInUser.getTypeOfUser().equals("HOMEOWNER")) {
+                    mServiceSwitch.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
 
 

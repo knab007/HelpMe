@@ -52,7 +52,9 @@ public class NewServiceActivity extends AppCompatActivity {
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
 
-    private String mResource = "Default";
+    private String defaultResource = "Default";
+    private String checkedResource;
+
     //private List<String> mAssignedResources;
     private SparseBooleanArray mCheckedResources;
 
@@ -134,6 +136,7 @@ public class NewServiceActivity extends AppCompatActivity {
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
                         mResourcesListView.setItemChecked(i, mCheckedResources.get(i));
 
+
                     }
 
                 }
@@ -145,11 +148,13 @@ public class NewServiceActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 mCheckedResources = mResourcesListView.getCheckedItemPositions();
-                                for(int i =0; i< mCheckedResources.size()+1 ; i++){
+                                for(int i =0; i<= mResourcesListView.getAdapter().getCount() ; i++){
                                     if(mCheckedResources.get(i)){
                                         //mAssignedResources.add(resources[i]);
-                                        mResource = resources[i];
+                                        checkedResource = resources[i];
+                                        updateResource(checkedResource);
                                     }
+
 
                                 }
                             }
@@ -206,13 +211,17 @@ public class NewServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourlyRate);
-        service.setResource(mResource);
+        service.setResource(defaultResource);
         service.setCreatorId(mAuth.getCurrentUser().getUid());
 
         mDatabaseServices.child(serviceId).setValue(service);
 
 
         Toast.makeText(this, "This Service is now effective to all HomeOwner", Toast.LENGTH_LONG).show();
+    }
+
+    private void updateResource (String defaultResource) {
+        this.defaultResource = defaultResource;
     }
 
     private boolean isValidService() {

@@ -14,11 +14,13 @@ public class User {
     private String mLastName;
     private String mEmail;
 
-
-
     private String typeOfUser;
     private int mPoints;
+
     private List<String> mAssignedServices;
+    private List<String> mDisponibility;
+
+
 
     /* Constructeurs */
     public User(String mId, String mFirstName, String mLastName, String mEmail, String type) {
@@ -30,6 +32,7 @@ public class User {
 
         this.mPoints = 0;
         this.mAssignedServices = new ArrayList<>();
+        this.mDisponibility = new ArrayList<>();
 
         //this.mFamily = null;
     }
@@ -99,6 +102,12 @@ public class User {
 
     public void setAssignedServices(List<String> assignedServices) {
         this.mAssignedServices = assignedServices;
+    }
+
+    public List<String> getDisponibility() { return mDisponibility; }
+
+    public void setDisponibility(List<String> days) {
+        this.mDisponibility = days;
     }
 
 
