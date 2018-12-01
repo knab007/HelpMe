@@ -30,8 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-//Sign up form based on https://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/
-//Used of attributename and is layout in the xml files for not getting error in the view
+
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 

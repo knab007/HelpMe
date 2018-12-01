@@ -31,7 +31,7 @@ import java.util.List;
 
 public class EditServiceActivity extends AppCompatActivity {
 
-    private static final String EXTRA_SERVICE_ID = "com.majes.uottawa.helpme.service_id";
+    private static final String EXTRA_SERVICE_ID = "com.software.uottawa.helpme.service_id";
     private DatabaseReference mDatabaseUsers;
     private DatabaseReference mDatabaseServices;
     private FirebaseAuth mAuth;
@@ -108,7 +108,7 @@ public class EditServiceActivity extends AppCompatActivity {
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceActivity
+                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};
                 mDialogAssignResourcesView = LayoutInflater.from(EditServiceActivity.this).inflate(R.layout.dialog_assign_resources, null);
                 mResourcesListView = mDialogAssignResourcesView.findViewById(R.id.resourcesListView);
                 mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

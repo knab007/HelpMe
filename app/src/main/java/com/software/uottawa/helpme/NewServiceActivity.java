@@ -126,7 +126,7 @@ public class NewServiceActivity extends AppCompatActivity {
         mBtnAssignResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};//TODO same list as the EditServiceActivity
+                final String[] resources = {"Cleaning", "Plumber", "Gardening", "Painting", "Extra"};
                 mDialogAssignResourcesView = LayoutInflater.from(NewServiceActivity.this).inflate(R.layout.dialog_assign_resources, null);
                 mResourcesListView = mDialogAssignResourcesView.findViewById(R.id.resourcesListView);
                 mResourcesListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

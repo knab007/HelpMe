@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -32,13 +31,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/**Classe pratiquement identique à EditTaskAcitivty, mais les items ne sont pas selectionnables
+/**Classe semblable à EditServiceActivity sauf qu'on nfait juste qu'afficher
  *
  *
  */
 public class ViewServiceActivity extends AppCompatActivity {
 
-    private static final String EXTRA_SERVICE_ID = "com.majes.uottawa.taskmanager.service_id";
+    private static final String EXTRA_SERVICE_ID = "com.software.uottawa.helpme.service_i";
     private DatabaseReference mDatabaseUsers;
     private DatabaseReference mDatabaseServices;
     private DatabaseReference mDatabaseNotes;
@@ -197,7 +196,7 @@ public class ViewServiceActivity extends AppCompatActivity {
                     Note note = snap.getValue(Note.class);
                     //inst.add(note);
 
-                    if(note.getTacheId().equals(mService.getId())) {
+                    if(note.getServiceId().equals(mService.getId())) {
                         if (note.getCreator().equals(mUser.getId())) {
                             inst.add(note);
                         } else {
@@ -300,7 +299,7 @@ public class ViewServiceActivity extends AppCompatActivity {
     protected void updateNote(Note note, String comment){
         if (note.getCreator() == mUser.getId()){             // check if user has permission to commit action
             DatabaseReference temp = FirebaseDatabase.getInstance().getReference("Notes").child(note.getId());
-            Note newNote = new Note(note.getId(),note.getTacheId(),note.getCreator(), comment);
+            Note newNote = new Note(note.getId(),note.getServiceId(),note.getCreator(), comment);
             temp.setValue(newNote);
             Toast.makeText(getApplicationContext(), "Note Updated", Toast.LENGTH_LONG).show();
 

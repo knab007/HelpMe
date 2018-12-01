@@ -6,15 +6,15 @@ package com.software.uottawa.helpme;
 
 public class Note{
 
-    private String id;	// Unique String servant de cle/identifiant
-    private String tacheId;
+    private String id;	// Unique String servant d'idendifiant
+    private String serviceId;
     private String creator;
     private String comment;
 
 
     public Note(String i,String ti, String cr, String co){
         this.id = i;
-        this.tacheId = ti;
+        this.serviceId = ti;
         this.creator = cr;
         this.comment = co;
     }
@@ -36,5 +36,5 @@ public class Note{
 
     protected void editComment(String note){ comment = note; }
 
-    protected String getTacheId(){ return tacheId; }
+    protected String getServiceId(){ return serviceId; }
 }

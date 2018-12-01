@@ -27,6 +27,14 @@
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
 
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:showAsAction="collapseActionView|ifRoom"
+            android:actionViewClass="android.widget.SearchView" />
+
         <Switch
             android:id="@+id/service_switch"
             android:layout_width="match_parent"
@@ -45,6 +53,10 @@
 
     </LinearLayout>
 
+
+
     <include layout="@layout/fab_sub_menu" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>

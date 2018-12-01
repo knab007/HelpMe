@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.majes.uottawa.taskmanager", appContext.getPackageName());
+        assertEquals("com.software.uottawa.helpme", appContext.getPackageName());
     }
 }

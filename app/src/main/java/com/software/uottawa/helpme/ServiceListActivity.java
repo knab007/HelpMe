@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -90,6 +89,7 @@ public class ServiceListActivity extends AppCompatActivity {
 
 
         mServicesListView = findViewById(R.id.service_list_view);
+
         //mAddServiceLayout = findViewById(R.id.layout_add_service);
         mServiceSwitch = findViewById(R.id.service_switch);
         mServiceSwitch.setVisibility(View.GONE);
@@ -161,6 +161,7 @@ public class ServiceListActivity extends AppCompatActivity {
                                 mCheckedDisponibility = mDisponibilityListView.getCheckedItemPositions();
                                 for(int i = 0; i< mDisponibilityListView.getAdapter().getCount() ; i++){
                                     if(mCheckedDisponibility.get(i)) {
+                                        if(mCheckedDisponibility.get(i))
                                         mAssignedDisponibility.add(days[i]);
                                     }
                                 }
@@ -300,13 +301,15 @@ public class ServiceListActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_task_list, menu);
-        return true;
-    }
+    /*    @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+                getMenuInflater().inflate(R.menu.menu_service_list, menu);
 
+                return true;
+
+        }
+    */
     private void deleteService(Service service) {
         for (String deleteId : service.getAssignedUsers()) {
             for (User user : mUsers) {

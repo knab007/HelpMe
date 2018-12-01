@@ -22,7 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 /**
- * Created by Maxime on 12-04-2017.
+ * Created by Anthony B.
  */
 public class UserActivity extends AppCompatActivity {
 
@@ -55,7 +55,6 @@ public class UserActivity extends AppCompatActivity {
         mTypeOfUserView = (TextView) findViewById(R.id.typeOfUser);
         mPoints = (TextView) findViewById(R.id.user_points);
 
-        //TODO CHANGE WHERE IS THE DISCONNECTED FUNCTION  TO PLACE IT IN THE MENU
         mSignout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,14 +82,12 @@ public class UserActivity extends AppCompatActivity {
                 String type = user.getTypeOfUser();
                 int points = user.getPoints();
 
-                mNameTextView.setText(name);//check the name of this user
-                mEmailTextView.setText(email);//check the email of this user
+                mNameTextView.setText(name);
+                mEmailTextView.setText(email);
                 mTypeOfUserView.setText(type);
-                mPoints.setText(String.valueOf(points));//Check point of this user
-                //check if the user is Parent or Child
+                mPoints.setText(String.valueOf(points));
 
             }
-            //TODO maybe catch some exception that can be happen if when we change the format of the databse
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
