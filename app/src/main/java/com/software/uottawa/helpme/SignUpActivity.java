@@ -162,10 +162,11 @@ public class SignUpActivity extends AppCompatActivity {
             mPasswordConfirmField.setError("Password Confirmation is required");
             isValid = false;
         }
-        //firebase limitation to a minimum of 6 characters for a password
+
+        //I can't be able to have just 5 characters with Firebase
         if (password.length() < 6) {
-            mPasswordLayout.setError("Password need atleast 6 characters");
-            mPasswordConfirmField.setError("Password need atleast 6 characters");
+            mPasswordLayout.setError("Password need at least 6 characters");
+            mPasswordConfirmField.setError("Password need at least 6 characters");
             isValid = false;
         }
         if (!password.equals(passwordConfirm)) {
