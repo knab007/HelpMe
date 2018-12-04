@@ -69,56 +69,21 @@
             android:focusable="false"
             android:hint="Hourly Date"
             android:inputType="date" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_weight="1" />
     </android.support.design.widget.TextInputLayout>
 
-    <RadioGroup
-        android:id="@+id/edit_status_radio_group"
+
+    <ListView
+        android:id="@+id/user_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/edit_due_hourly_rate_layout"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <RadioButton
-            android:id="@+id/edit_radio_incomplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Incomplet" />
-
-        <RadioButton
-            android:id="@+id/edit_radio_in_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="En cours" />
-
-        <RadioButton
-            android:id="@+id/edit_radio_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Complete" />
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/edit_res_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_status_radio_group"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <RadioButton
-            android:id="@+id/edit_radio_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Money" />
-
-        <RadioButton
-            android:id="@+id/edit_radio_clean"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cleaning Kit" />
-    </RadioGroup>
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <ListView
         android:id="@+id/instruction"
@@ -126,7 +91,9 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp"
-        android:layout_below="@+id/edit_res_radio_group"/>
+        android:layout_below="@+id/user_list_view">
+
+    </ListView>
 
     <ListView
         android:id="@+id/feedback"
@@ -134,6 +101,9 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp"
-        android:layout_below="@+id/instruction"/>
+        android:layout_below="@+id/instruction">
+
+    </ListView>
+
 
 </RelativeLayout>

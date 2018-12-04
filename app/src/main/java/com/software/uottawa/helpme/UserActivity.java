@@ -85,6 +85,7 @@ public class UserActivity extends AppCompatActivity {
                 mNameTextView.setText(name);
                 mEmailTextView.setText(email);
                 mTypeOfUserView.setText(type);
+                //A modifier plus tard
                 mPoints.setText(String.valueOf(points));
 
             }

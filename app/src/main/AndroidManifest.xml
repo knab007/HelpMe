@@ -34,7 +34,13 @@
         <activity
             android:name=".ServiceListActivity"
             android:label="@string/title_activity_service_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user_settings" />
@@ -44,9 +50,6 @@
         <activity
             android:name=".ViewServiceActivity"
             android:label="@string/title_activity_view_service" />
-        <activity
-            android:name=".NoteActivity"
-            android:label="Note" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

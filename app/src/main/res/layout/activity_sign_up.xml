@@ -1,4 +1,5 @@
 <android.support.constraint.ConstraintLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,174 +7,245 @@
     android:layout_height="match_parent">
 
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.5"
+        android:background="@drawable/rectangle"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/service_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
                 android:text="First Name:"
+                android:textAllCaps="false"
                 android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/first_name_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:hint="First Name"
+                android:hint="First Name          "
                 android:inputType="textCapSentences"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColorLink="@color/colorPrimaryDark" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/last_name_input_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Name"
+                android:layout_marginLeft="30dp"
+                android:text="Last Name:"
                 android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/last_name_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
+                android:hint="Last Name           "
                 android:inputType="textCapSentences"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColorLink="@color/colorPrimaryDark" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/email_input_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
+                android:layout_marginLeft="30dp"
+                android:text="E-mail:"
                 android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/email_edit_text"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:hint="Email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email                               "
                 android:inputType="textEmailAddress"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColorLink="@color/colorPrimaryDark" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/password_input_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password"
+                android:layout_marginLeft="30dp"
+                android:text="Password:"
                 android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/password_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:autofillHints=""
+                android:hint="Password                 "
                 android:inputType="textPassword|textVisiblePassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColorLink="@color/colorPrimaryDark" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/password_confirm_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirm Password"
+                android:layout_marginLeft="30dp"
+                android:text="Confirm password:"
                 android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/password_confirm_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Confirm Password"
+                android:hint="Confirm Password        "
                 android:inputType="textPassword|textVisiblePassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColorLink="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
 
         </LinearLayout>
 
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginLeft="30dp"
+
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radioAdmin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin" />
+                android:text="Admin"
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <RadioButton
                 android:id="@+id/radioSP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Service Provider"
-                android:textAlignment="textStart" />
+                android:textColorLink="@color/colorPrimaryDark"
+                tools:textColorLink="@color/colorPrimaryDark" />
 
             <RadioButton
                 android:id="@+id/radioHomeO"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Owner" />
+                android:text="Home Owner"
+                android:textColorLink="@color/colorPrimaryDark" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
         </RadioGroup>
 
-
-        <android.support.design.widget.TextInputLayout
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
+            <Button
+                android:id="@+id/btn_sign_up"
+                android:layout_width="368dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="?android:attr/colorSecondary"
+                android:onClick="createAccount"
+                android:text="Sign Up"
+                android:textColor="@android:color/background_light"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:targetApi="25" />
+        </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/btn_sign_up"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="createAccount"
-            android:text="Sign Up"
-            tools:layout_editor_absoluteX="280dp"
-            tools:layout_editor_absoluteY="447dp" />
 
     </LinearLayout>
+    />
 
 </android.support.constraint.ConstraintLayout>

@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,58 +16,74 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-/**
- * Created by Samir T.
- */
+public class ReservationAdapter extends ArrayAdapter<Reservation>{
 
-public class ServiceAdapter extends ArrayAdapter<Service> {
-
-    private List<Service> mServiceList;
-
+    private List<Reservation> mUserReservationList;
+    private User mUser;
+    private Service mService;
+    private DatabaseReference mDatabaseReservations;
     private DatabaseReference mDatabaseServices;
     private DatabaseReference mDatabaseUsers;
     private FirebaseAuth mAuth;
 
     private String mUserId;
-    private int mUserPoints;
 
-    public ServiceAdapter(Context context, List<Service> serviceList) {
-        super(context, R.layout.service_list_item_view, serviceList);
-        this.mServiceList = serviceList;
+    public ReservationAdapter(Context context, List<Reservation> reservationList) {
+        super(context, R.layout.reservation_list_item_view, reservationList);
+        this.mUserReservationList = reservationList;
     }
 
-    @NonNull
-    @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View rowView = LayoutInflater.from(getContext()).inflate(R.layout.service_list_item_view, parent, false);
+        View rowView = LayoutInflater.from(getContext()).inflate(R.layout.reservation_list_item_view, parent, false);
 
-        final Service service = mServiceList.get(position);
+        final Reservation reservation = mUserReservationList.get(position);
 
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference("users");
+        mDatabaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
         mAuth = FirebaseAuth.getInstance();
         mUserId = mAuth.getCurrentUser().getUid();
 
-        ImageView serviceIcon = rowView.findViewById(R.id.service_icon);
-        TextView serviceTitle = rowView.findViewById(R.id.service_title);
-        TextView serviceResource = rowView.findViewById(R.id.service_resource);
+        TextView date = rowView.findViewById(R.id.date);
+        TextView service_title = rowView.findViewById(R.id.service_title);
+        TextView service_resource = rowView.findViewById(R.id.resource);
+        TextView rating = rowView.findViewById(R.id.rating);
 
-        serviceIcon.setImageResource(R.drawable.service_icon);
-        serviceTitle.setText(service.getTitle());
-        serviceResource.setText(service.getResource());
+
+        date.setText(reservation.getDate());
+        System.out.println(date);
+        service_title.setText(reservation.getServiceName());
+        service_resource.setText(reservation.getResource());
+        rating.setText("0");
+
+
+        mDatabaseReservations.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Reservation reservation = snapshot.getValue(Reservation.class);
+                    reservation.getServiceId();
+                   /* if(reservation.get){
+
+                    }*/
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    if (user.getId().equals(mUserId))
-                        mUserPoints = user.getPoints();
+                    //if (user.getId().equals(mUserId))
+                        //mUserPoints = user.getPoints();
                 }
             }
 
@@ -85,6 +98,7 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Service service = snapshot.getValue(Service.class);
+                    //if()
                 }
             }
 
@@ -96,5 +110,6 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
 
         return rowView;
     }
+
 
 }

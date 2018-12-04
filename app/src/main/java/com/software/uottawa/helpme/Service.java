@@ -16,24 +16,14 @@ public class Service {
     private String mId;
     private String mTitle;
     private String mCreatorId;
+    //Dans le cas où on a plus d'1 admin et on veut garder la trace de l'admin qui a crée le service
     private String mCreatorName;
     private String mDescription;
     private String mHourlyRate;
     private List<String> mAssignedUsers;
 
-
-    //private List<String> mRessources;
     private String mResource;
     private String mInstruction;
-
-    DatabaseReference databaseNotes;
-    // DatabaseReference databaseFeed;
-
-    ListView listViewInst;
-    ListView listViewFeed;
-
-    List<Note> inst;
-    List<Note> feed;
 
 
     public Service() {
@@ -107,13 +97,6 @@ public class Service {
         mAssignedUsers = assignedUsers;
     }
 
-   /* public List<String> getRessources() {
-        return mRessources;
-    }
-
-    public void setRessources(List<String> ressources) {
-        mRessources = ressources;
-    }*/
     public String getResource() { return mResource;   }
 
     public void setResource(String resource) { this.mResource = resource;    }

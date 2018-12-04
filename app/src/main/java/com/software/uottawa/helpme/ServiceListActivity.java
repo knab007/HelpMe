@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -40,14 +43,17 @@ public class ServiceListActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabaseServices;
     private DatabaseReference mDatabaseUsers;
-    private DatabaseReference mDatabaseNotes;
+    private DatabaseReference mDatabaseReservations;
     private FirebaseAuth mAuth;
     private List<Service> mServices;
     private List<User> mUsers;
-    private List<Service> mUserServices;
+    private List<Reservation> mReservations;
+    //private List<Service> mUserServices;
+    private List<Reservation> mUserReservations;
     private User loggedInUser;
 
     private FloatingActionButton mFAB;
+    private EditText filterText;
 
     private FloatingActionButton mFAB2;
     private View mDialogAssignDisponibilityView;
@@ -58,11 +64,13 @@ public class ServiceListActivity extends AppCompatActivity {
     private SparseBooleanArray mCheckedDisponibility;
 
     private LinearLayout mAddServiceLayout;
-    private Switch mServiceSwitch;
+    private Switch mReservationSwitch;
 
     private ListView mServicesListView;
+    private ListView mReservationsListView;
     private ServiceAdapter mServiceAdapter;
-    private boolean userServicesOnly = false;
+    private ReservationAdapter mReservationAdapter;
+    //private boolean userServicesOnly = false;
 
 
 
@@ -73,50 +81,101 @@ public class ServiceListActivity extends AppCompatActivity {
 
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference("users");
-        mDatabaseNotes = FirebaseDatabase.getInstance().getReference("Notes");
+        mDatabaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
 
         mAuth = FirebaseAuth.getInstance();
-
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        filterText = (EditText) findViewById(R.id.filterText);
+        mServicesListView = (ListView) findViewById(R.id.service_list_view);
+        mReservationsListView = (ListView) findViewById(R.id.reservation_list_view);
+
+        //mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, mServices);
+        //mServiceAdapter.notifyDataSetChanged();
+
+        filterText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().isEmpty()) {
+                    ArrayList<Service> tmp = new ArrayList<>();
+                    for (Service sv : mServices) {
+                    //We have done both in one search bar. So we can find service by provider name or name of the service(title)
+                        if(sv.getAssignedUsers()!=null) {
+                            for (String id : sv.getAssignedUsers()) {
+                                for (User u : mUsers) {
+                                    if(u.getFirstName().toLowerCase().contains(s.toString()) && id.equals(u.getId()) && !tmp.contains(sv)){
+                                        tmp.add(sv);
+
+                                        //System.out.println("size userservice "+mUserServices.size());
+                                    }
+                                }
+                            }
+                        }
 
 
+                        if (sv.getTitle().toLowerCase().contains(s.toString())) {
+                            tmp.add(sv);
+                        }
+                    }
+                    //System.out.println(tmp.size()+ "Size userServices "+mUserServices.size()+ "Size user "+mUsers.size());
 
+                    mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, tmp);
+                    mServicesListView.setAdapter(mServiceAdapter);
+                } else {
+                    mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, mServices);
+                    mServicesListView.setAdapter(mServiceAdapter);
+                }
+                mServiceAdapter.notifyDataSetChanged();
 
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {
 
-        mServicesListView = findViewById(R.id.service_list_view);
+            }
+        });
 
         //mAddServiceLayout = findViewById(R.id.layout_add_service);
-        mServiceSwitch = findViewById(R.id.service_switch);
-        mServiceSwitch.setVisibility(View.GONE);
+        mReservationSwitch = findViewById(R.id.reservation_switch);
+        mReservationSwitch.setVisibility(View.GONE);
+
 
         mServices = new ArrayList<>();
         mUsers = new ArrayList<>();
-        mUserServices = new ArrayList<>();
+        //mReservations = new ArrayList<>();
+        mUserReservations = new ArrayList<>();
+        //mUserServices = new ArrayList<>();
         //Assigning Disponibility
         mAssignedDisponibility = new ArrayList<>();
 
 
-        mServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mReservationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    userServicesOnly = true;
-                    mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, mUserServices);
-                    mServicesListView.setAdapter(mServiceAdapter);
-                    mServiceAdapter.notifyDataSetChanged();
+                    filterText.setVisibility(View.GONE);
+                    mServicesListView.setVisibility(View.GONE);
+                    mReservationAdapter = new ReservationAdapter(ServiceListActivity.this, mUserReservations);
+                    mReservationsListView.setAdapter(mReservationAdapter);
+                    mReservationAdapter.notifyDataSetChanged();
                 } else {
-                    userServicesOnly = false;
+                    filterText.setVisibility(View.VISIBLE);
+                    mReservationsListView.setVisibility(View.GONE);
+                    mServicesListView.setVisibility(View.VISIBLE);
                     mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, mServices);
                     mServicesListView.setAdapter(mServiceAdapter);
                     mServiceAdapter.notifyDataSetChanged();
                 }
             }
         });
+
 
         mFAB = findViewById(R.id.fab_add_service);
         mFAB.setVisibility(View.GONE);
@@ -132,82 +191,71 @@ public class ServiceListActivity extends AppCompatActivity {
         mFAB2.setVisibility(View.GONE);
 
         getCurrentUser();
+        if(loggedInUser != null) {
+            System.out.println(loggedInUser.getTypeOfUser());
+        }
 
-
-         mFAB2.setOnClickListener(new View.OnClickListener() {
+        mFAB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 final String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
                 mDialogAssignDisponibilityView = LayoutInflater.from(ServiceListActivity.this).inflate(R.layout.dialog_assign_resources, null);
-                mDisponibilityListView = (ListView) mDialogAssignDisponibilityView.findViewById(R.id.resourcesListView);
+                mDisponibilityListView = mDialogAssignDisponibilityView.findViewById(R.id.resourcesListView);
                 mDisponibilityListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                mDisponibilityListAdapter =new ArrayAdapter<String>(ServiceListActivity.this, android.R.layout.simple_list_item_multiple_choice, days);
+                mDisponibilityListAdapter = new ArrayAdapter<String>(ServiceListActivity.this, android.R.layout.simple_list_item_multiple_choice, days);
                 mDisponibilityListView.setAdapter(mDisponibilityListAdapter);
-                if(mCheckedDisponibility != null){
-                    for(int i = 0; i < mCheckedDisponibility.size() + 1; i++){
+                if (mCheckedDisponibility != null) {
+                    for (int i = 0; i < mCheckedDisponibility.size() + 1; i++) {
                         mDisponibilityListView.setItemChecked(i, mCheckedDisponibility.get(i));
 
                     }
 
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(ServiceListActivity.this);
-                builder.setTitle("Assign/update your days")
-                        .setView(mDialogAssignDisponibilityView)
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                mCheckedDisponibility = mDisponibilityListView.getCheckedItemPositions();
-                                for(int i = 0; i< mDisponibilityListView.getAdapter().getCount() ; i++){
-                                    if(mCheckedDisponibility.get(i)) {
-                                        if(mCheckedDisponibility.get(i))
-                                        mAssignedDisponibility.add(days[i]);
-                                    }
-                                }
-                                updateUser();
+                builder.setTitle("Assign/update your days").setView(mDialogAssignDisponibilityView).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        mCheckedDisponibility = mDisponibilityListView.getCheckedItemPositions();
+                        for (int i = 0; i < mDisponibilityListView.getAdapter().getCount(); i++) {
+                            if (mCheckedDisponibility.get(i)) {
+                                if (mCheckedDisponibility.get(i)) mAssignedDisponibility.add(days[i]);
+                            }
+                        }
+                        updateUser();
 
 
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                mAssignedDisponibility.clear();
-                                if(mCheckedDisponibility != null){
-                                    mCheckedDisponibility.clear();
-                                }
-                            }
-                        })
-                        .show();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAssignedDisponibility.clear();
+                        if (mCheckedDisponibility != null) {
+                            mCheckedDisponibility.clear();
+                        }
+                    }
+                }).show();
 
 
             }
         });
 
-        /*
-        FloatingActionButton addServiceFab = findViewById(R.id.fab_add_service);
-        addServiceFab.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-           Intent intent = new Intent(ServiceListActivity.this, NewServiceActivity.class);
-           startActivity(intent);
-        }
-        });
-*/
+
         mServicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Service selected = mServices.get(position);
-                if (userServicesOnly) {
+        /*        if (userServicesOnly) {
                     selected = mUserServices.get(position);
                 }
+        */
                 String serviceId = selected.getId();
                 Intent intent = ViewServiceActivity.newIntent(ServiceListActivity.this, serviceId);
                 startActivity(intent);
             }
         });
 
+        //HomeOwner can't do the long Click because he doesn't have right to edit anything
 
         mServicesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -217,40 +265,29 @@ public class ServiceListActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(ServiceListActivity.this);
-                builder.setTitle("Edit Service")
-                        .setMessage("Are you sure you want to edit this service?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //deletes entry from database
-                                Service selected = mServices.get(position);
-                                if (userServicesOnly) {
-                                    String serviceId = selected.getId();
-                                    Intent intent = EditServiceActivity.newIntent(ServiceListActivity.this, serviceId);
-                                    startActivity(intent);
-                                }
-                                if (!userServicesOnly && mUserServices.contains(selected)) {
-                                    selected = mUserServices.get(position);
-                                }
-                                String serviceId = selected.getId();
-                                Intent intent = EditServiceActivity.newIntent(ServiceListActivity.this, serviceId);
-                                startActivity(intent);
+                builder.setTitle("Edit Service").setMessage("Are you sure you want to edit this service?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //deletes entry from database
+                        Service selected = mServices.get(position);
+                        String serviceId = selected.getId();
+                        Intent intent = EditServiceActivity.newIntent(ServiceListActivity.this, serviceId);
+                        startActivity(intent);
 
 
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
+                    }
+                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }).show();
 
                 return true;
             }
 
         });
-
     }
+
+
 
     @Override
     protected void onStart() {
@@ -260,15 +297,14 @@ public class ServiceListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mServices.clear();
+                //mUserServices.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Service service = postSnapshot.getValue(Service.class);
                     mServices.add(service);
                 }
-                if (!userServicesOnly) {
                     mServiceAdapter = new ServiceAdapter(ServiceListActivity.this, mServices);
                     mServicesListView.setAdapter(mServiceAdapter);
-                }
-                mServiceAdapter.notifyDataSetChanged();
+                    mServiceAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -277,7 +313,43 @@ public class ServiceListActivity extends AppCompatActivity {
             }
         });
 
+        mDatabaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mUsers.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    User user = postSnapshot.getValue(User.class);
+                    mUsers.add(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseReservations.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //mReservations.clear();
+                mUserReservations.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Reservation reservation = postSnapshot.getValue(Reservation.class);
+                    //mReservations.add(reservation);
+                    if(reservation.getUserId().equals(loggedInUser.getId())){
+                        mUserReservations.add(reservation);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
+
 
     private void updateUser() {
         loggedInUser.setDisponibility(mAssignedDisponibility);
@@ -287,7 +359,6 @@ public class ServiceListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
     }
 
     @Override
@@ -301,7 +372,7 @@ public class ServiceListActivity extends AppCompatActivity {
         return true;
     }
 
-        @Override
+    @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
                 getMenuInflater().inflate(R.menu.menu_service_list, menu);
@@ -340,7 +411,13 @@ public class ServiceListActivity extends AppCompatActivity {
                     mFAB2.setVisibility(View.VISIBLE);
                 }
                 if (loggedInUser.getTypeOfUser().equals("HOMEOWNER")) {
-                    mServiceSwitch.setVisibility(View.VISIBLE);
+                    mReservationSwitch.setVisibility(View.VISIBLE);
+                    mServicesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            return false;
+                        }
+                    });
                 }
 
             }

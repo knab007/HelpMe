@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,19 +17,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Samir T.
  */
 
-public class ServiceAdapter extends ArrayAdapter<Service> {
+public class UserAdapter extends ArrayAdapter<User> {
 
-    private List<Service> mServiceList;
-
+    private List<User> mUserList;
+    private String days;
     private DatabaseReference mDatabaseServices;
     private DatabaseReference mDatabaseUsers;
     private FirebaseAuth mAuth;
@@ -39,30 +34,43 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
     private String mUserId;
     private int mUserPoints;
 
-    public ServiceAdapter(Context context, List<Service> serviceList) {
-        super(context, R.layout.service_list_item_view, serviceList);
-        this.mServiceList = serviceList;
+    public UserAdapter(Context context, List<User> userList) {
+        super(context, R.layout.user_list_item_view, userList);
+        this.mUserList = userList;
     }
+
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View rowView = LayoutInflater.from(getContext()).inflate(R.layout.service_list_item_view, parent, false);
+        View rowView = LayoutInflater.from(getContext()).inflate(R.layout.user_list_item_view, parent, false);
 
-        final Service service = mServiceList.get(position);
+        final User user = mUserList.get(position);
 
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference("users");
         mAuth = FirebaseAuth.getInstance();
         mUserId = mAuth.getCurrentUser().getUid();
 
-        ImageView serviceIcon = rowView.findViewById(R.id.service_icon);
-        TextView serviceTitle = rowView.findViewById(R.id.service_title);
-        TextView serviceResource = rowView.findViewById(R.id.service_resource);
+        ImageView providerIcon = rowView.findViewById(R.id.provider_icon);
+        TextView providerFirstName = rowView.findViewById(R.id.first_name);
+        TextView providerLastName = rowView.findViewById(R.id.last_name);
+        TextView providerEmail = rowView.findViewById(R.id.email);
+        if(user.getDisponibility()!=null) {
+            days = "[ ";
+            for (String day : user.getDisponibility()) {
+                days = days +day+" ";
+            }
+            days = days +"]";
+        }
+        TextView providerDisponibility = rowView.findViewById(R.id.disponibility);
 
-        serviceIcon.setImageResource(R.drawable.service_icon);
-        serviceTitle.setText(service.getTitle());
-        serviceResource.setText(service.getResource());
+        providerIcon.setImageResource(R.drawable.account);
+        System.out.println(providerFirstName);
+        providerFirstName.setText(user.getFirstName());
+        providerLastName.setText(user.getLastName());
+        providerEmail.setText(user.getEmail());
+        providerDisponibility.setText(days);
 
         mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,5 +104,6 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
 
         return rowView;
     }
+
 
 }
