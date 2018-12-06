@@ -1,31 +1,37 @@
 package com.software.uottawa.helpme;
 
-import java.util.List;
-
 public class Reservation {
     //All users in this class must be HomeOwner du to constructor parameters
     private String mId;
-    private String mUserId;
-    private String mServiceId;
+    private String mHomeOwnerId;
+    private String mHomeOwnerName;
 
-    private String mUsername;
-    private String mEmail;
+    private String mPSAssignedId;
+    private String mPsAssignedName;
+    private int mPsAssignedRating;
+    private String mPsAssignedEmail;
+
+    private String mServiceId;
     private String mServiceName;
+    private String mServiceDescription;
     private String mDate;
     private  String mResource;
-    private int mUserAssigned;
-
 
     public Reservation(){}
 
-    public Reservation(String Id, String serviceId, int userAssigned, String userId, String username, String serviceName, String date, String resource, String email){
+    public Reservation(String Id,  String homeOwnerId, String homeOwnerName, String psAssignedId, String psAssignedName, String psAssignedEmail, int psAssignedRating, String serviceId,String serviceName, String serviceDescription, String date, String resource){
         mId = Id;
+        mHomeOwnerId = homeOwnerId;
+        mHomeOwnerName = homeOwnerName;
+
+        mPSAssignedId = psAssignedId;
+        mPsAssignedName = psAssignedName;
+        mPsAssignedEmail = psAssignedEmail;
+        mPsAssignedRating = psAssignedRating;
+
         mServiceId = serviceId;
-        mUserId = userId;
-        mUserAssigned = userAssigned;
-        mUsername = username;
-        mEmail = email;
         mServiceName = serviceName;
+        mServiceDescription = serviceDescription;
         mDate = date;
         mResource = resource;
 
@@ -35,25 +41,39 @@ public class Reservation {
 
     public void setId(String id) { this.mId = id; }
 
-    public String getUserId() { return mUserId; }
+    public String getHomeOwnerId() { return mHomeOwnerId; }
 
-    public void setUserId(String userId) { this.mUserId = userId; }
+    public void setHomeOwnerId(String userId) { this.mHomeOwnerId = userId; }
+
+    public String getHomeOwnerName() { return mHomeOwnerName; }
+
+    public void setHomeOwnerName(String homeOwnerName) { this.mHomeOwnerName = homeOwnerName; }
+
+    public String getPsAssignedName() { return mPsAssignedName; }
+
+    public void setPsAssignedName(String psAssignedName) { this.mPsAssignedName = psAssignedName; }
+
+    public int getPsAssignedRating() { return mPsAssignedRating; }
+
+    public void setPsAssignedRating(int psAssignedRating) { this.mPsAssignedRating = psAssignedRating; }
+
+    public String getPsAssignedEmail() { return mPsAssignedEmail; }
+
+    public void setEmail(String psAssignedEmail) { this.mPsAssignedEmail = psAssignedEmail; }
 
     public String getServiceId() { return mServiceId; }
 
     public void setServiceId(String serviceId) { this.mServiceId = serviceId; }
 
-    public String getUsername() { return mUsername; }
-
-    public void setUsername(String username) { this.mUsername = username; }
-
-    public String getEmail() { return mEmail; }
-
-    public void setEmail(String email) { this.mEmail = email; }
-
     public String getServiceName() { return mServiceName; }
 
     public void setServiceName(String serviceName) { this.mServiceName = serviceName; }
+
+    public String getServiceDescription() { return mServiceDescription; }
+
+    public void setServiceDescription(String serviceDescription) {
+        this.mServiceDescription = serviceDescription;
+    }
 
     public String getDate() { return mDate; }
 
@@ -63,10 +83,8 @@ public class Reservation {
 
     public void setResource(String resource) { this.mResource = resource; }
 
-    public int getUserAssigned() { return mUserAssigned; }
+    public String getPSAssignedId() { return mPSAssignedId; }
 
-    public void setUserAssigned(int userAssigned) {
-        this.mUserAssigned = userAssigned;
-    }
+    public void setPSAssignedId(String psAssignedId) { this.mPSAssignedId = psAssignedId; }
 
 }

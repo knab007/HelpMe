@@ -59,7 +59,7 @@ public class EditServiceActivity extends AppCompatActivity {
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
 
-    private String defaultResource = "Default";
+    //private String defaultResource = "Extra";
     private String checkedResource;
     private SparseBooleanArray mCheckedResources;
 
@@ -117,8 +117,6 @@ public class EditServiceActivity extends AppCompatActivity {
                 if(mCheckedResources != null){
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
                         mResourcesListView.setItemChecked(i, mCheckedResources.get(i));
-
-
                     }
 
                 }
@@ -136,8 +134,6 @@ public class EditServiceActivity extends AppCompatActivity {
                                         checkedResource = resources[i];
                                         updateResource(checkedResource);
                                     }
-
-
                                 }
                             }
                         })
@@ -170,8 +166,6 @@ public class EditServiceActivity extends AppCompatActivity {
         mBtnDelService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //if (mUser.getTypeOfUser() == "ADMIN") {
 
                 final Intent goBack = new Intent(EditServiceActivity.this, ServiceListActivity.class);
                 mServiceName.setText(mService.getTitle());
@@ -243,6 +237,7 @@ public class EditServiceActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         mDatabaseServices.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -252,6 +247,7 @@ public class EditServiceActivity extends AppCompatActivity {
                     mServices.add(service);
                     if (service.getId().equals(extraServiceId)) {
                         mService = service;
+                        checkedResource = mService.getResource();
                     }
                 }
                 serviceStatus();
@@ -330,7 +326,7 @@ public class EditServiceActivity extends AppCompatActivity {
         service.setDescription(description);
         service.setInstruction(instruction);
         service.setRate(hourly_rate);
-        service.setResource(defaultResource);
+        service.setResource(checkedResource);
         if (mAssignedUserIds.isEmpty()) {
             service.setAssignedUsers(mService.getAssignedUsers());
         } else {
@@ -347,7 +343,7 @@ public class EditServiceActivity extends AppCompatActivity {
 
         if (mAssignedUserIds != null) {
             for (String assignId : mAssignedUserIds) {
-                if (!existingAssignees.contains(assignId)) {
+                if (!existingAssignees.contains(assignId) && mUsers != null) {
                     for (User user : mUsers) {
                         if (user.getId().equals(assignId) && user.getTypeOfUser() == "SP") {
                             List<String> assignedServices = new ArrayList<>();
@@ -397,8 +393,9 @@ public class EditServiceActivity extends AppCompatActivity {
     }
 
     private void updateResource (String defaultResource) {
-        this.defaultResource = defaultResource;
+        this.checkedResource = defaultResource;
     }
+
 
     private boolean isValidService() {
 

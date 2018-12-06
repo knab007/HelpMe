@@ -2,6 +2,7 @@ package com.software.uottawa.helpme;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -53,6 +55,7 @@ public class ServiceListActivity extends AppCompatActivity {
     private User loggedInUser;
 
     private FloatingActionButton mFAB;
+    private RatingBar mBar;
     private EditText filterText;
 
     private FloatingActionButton mFAB2;
@@ -79,6 +82,7 @@ public class ServiceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_list);
 
+
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference("users");
         mDatabaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
@@ -89,6 +93,7 @@ public class ServiceListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         filterText = (EditText) findViewById(R.id.filterText);
+        filterText.setVisibility(View.GONE);
         mServicesListView = (ListView) findViewById(R.id.service_list_view);
         mReservationsListView = (ListView) findViewById(R.id.reservation_list_view);
 
@@ -195,6 +200,7 @@ public class ServiceListActivity extends AppCompatActivity {
             System.out.println(loggedInUser.getTypeOfUser());
         }
 
+
         mFAB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,6 +245,7 @@ public class ServiceListActivity extends AppCompatActivity {
 
             }
         });
+
 
 
         mServicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -337,8 +344,10 @@ public class ServiceListActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Reservation reservation = postSnapshot.getValue(Reservation.class);
                     //mReservations.add(reservation);
-                    if(reservation.getUserId().equals(loggedInUser.getId())){
-                        mUserReservations.add(reservation);
+                    if(reservation.getHomeOwnerId() != null) {
+                        if (reservation.getHomeOwnerId().equals(loggedInUser.getId())) {
+                            mUserReservations.add(reservation);
+                        }
                     }
                 }
             }
@@ -350,6 +359,45 @@ public class ServiceListActivity extends AppCompatActivity {
         });
     }
 
+    public void addRate(View v){
+
+        View view = LayoutInflater.from(ServiceListActivity.this).inflate(R.layout.dialog_rating_user, null);
+        /*mDisponibilityListView = mDialogAssignDisponibilityView.findViewById(R.id.resourcesListView);
+        mDisponibilityListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mDisponibilityListAdapter = new ArrayAdapter<String>(ServiceListActivity.this, android.R.layout.simple_list_item_multiple_choice, days);
+        mDisponibilityListView.setAdapter(mDisponibilityListAdapter);
+        if (mCheckedDisponibility != null) {
+            for (int i = 0; i < mCheckedDisponibility.size() + 1; i++) {
+                mDisponibilityListView.setItemChecked(i, mCheckedDisponibility.get(i));
+
+            }
+
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceListActivity.this);
+        builder.setTitle("Assign/update your days").setView(mDialogAssignDisponibilityView).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                mCheckedDisponibility = mDisponibilityListView.getCheckedItemPositions();
+                for (int i = 0; i < mDisponibilityListView.getAdapter().getCount(); i++) {
+                    if (mCheckedDisponibility.get(i)) {
+                        if (mCheckedDisponibility.get(i)) mAssignedDisponibility.add(days[i]);
+                    }
+                }
+                updateUser();
+
+
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mAssignedDisponibility.clear();
+                if (mCheckedDisponibility != null) {
+                    mCheckedDisponibility.clear();
+                }
+            }
+        }).show();
+        */
+    }
 
     private void updateUser() {
         loggedInUser.setDisponibility(mAssignedDisponibility);
@@ -404,13 +452,18 @@ public class ServiceListActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loggedInUser = dataSnapshot.getValue(User.class);
                 if (loggedInUser.getTypeOfUser().equals("ADMIN")) {
+                    mReservationSwitch.setVisibility(View.GONE);
+                    filterText.setVisibility(View.GONE);
                     mFAB.setVisibility(View.VISIBLE);
                 }
                 if (loggedInUser.getTypeOfUser().equals("SP")) {
+                    mReservationSwitch.setVisibility(View.GONE);
+                    filterText.setVisibility(View.GONE);
                     mFAB.setVisibility(View.VISIBLE);
                     mFAB2.setVisibility(View.VISIBLE);
                 }
                 if (loggedInUser.getTypeOfUser().equals("HOMEOWNER")) {
+                    filterText.setVisibility(View.VISIBLE);
                     mReservationSwitch.setVisibility(View.VISIBLE);
                     mServicesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override

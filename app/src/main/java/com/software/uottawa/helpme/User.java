@@ -3,6 +3,7 @@ import android.widget.RatingBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Samir T.
@@ -21,7 +22,8 @@ public class User {
 
     private int mPoints;
     private List<Double>  mListRating;
-    private Double rating;
+    private int rating;
+    private Random r;
 
     private List<String> mAssignedServices;
     private List<String> mDisponibility;
@@ -37,22 +39,14 @@ public class User {
         this.typeOfUser = type;
 
         this.mPoints = 0;
-        this.rating = 0.0;
         this.mAssignedServices = new ArrayList<>();
         this.mDisponibility = new ArrayList<>();
         this.mListRating = new ArrayList<>();
+        r = new Random();
+        int star = r.nextInt(5);
+        this.rating = star;
 
-        if(mListRating != null) {
-            Double somme = mListRating.get(0);
-            if(mListRating.size()>=2) {
-                for (int i = 1; i < mListRating.size(); i++) {
-                    somme = somme + mListRating.get(i);
-                }
-                rating = somme / mListRating.size();
-            }
-            rating = somme;
-        }
-    }
+       }
 
     public User() {
         //SET BY DEFAULT BY ECLIPSE, CHANGE IF NECESSARY
@@ -108,9 +102,9 @@ public class User {
 
     public void setListRating(List<Double> ListRating) { this.mListRating = ListRating; }
 
-    public Double getRating() { return rating; }
+    public int getRating() { return rating; }
 
-    public void setRating(Double rating) { this.rating = rating; }
+    public void setRating(int rating) { this.rating = rating; }
 
     public int getPoints() {
         return mPoints;

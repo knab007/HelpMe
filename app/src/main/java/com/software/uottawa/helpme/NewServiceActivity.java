@@ -52,7 +52,7 @@ public class NewServiceActivity extends AppCompatActivity {
     private ListView mResourcesListView;
     private ArrayAdapter<String> mResourcesListAdapter;
 
-    private String defaultResource = "Default";
+    private String defaultResource = "Extra";
     private String checkedResource;
 
     //private List<String> mAssignedResources;
@@ -135,8 +135,6 @@ public class NewServiceActivity extends AppCompatActivity {
                 if(mCheckedResources != null){
                     for(int i =0; i < mCheckedResources.size() + 1; i++){
                         mResourcesListView.setItemChecked(i, mCheckedResources.get(i));
-
-
                     }
 
                 }

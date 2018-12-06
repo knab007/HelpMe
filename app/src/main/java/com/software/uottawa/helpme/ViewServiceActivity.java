@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,6 +45,10 @@ public class ViewServiceActivity extends AppCompatActivity {
     private List<User> mUsers;
     private Service mService;
     private User loggedInUser;
+    private String psAssignedId;
+    private String psAssignedName;
+    private String psAssignedEmail;
+    private int psAssignedRating;
 
 
     private TextView mServiceName;
@@ -81,8 +86,8 @@ public class ViewServiceActivity extends AppCompatActivity {
         mDatabaseServices = FirebaseDatabase.getInstance().getReference("services");
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference("users");
         mDatabaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
-        mUsers = new ArrayList<>();
 
+        mUsers = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -91,6 +96,7 @@ public class ViewServiceActivity extends AppCompatActivity {
         mServiceInstruction = findViewById(R.id.edit_service_instruction);
         mServiceHourlyRate = findViewById(R.id.edit_due_hourly_rate);
         mUsersListView = findViewById(R.id.user_list_view);
+        mUsersListView.setVisibility(View.GONE);
         mBook = findViewById(R.id.book);
         getCurrentUser();
 
@@ -146,6 +152,19 @@ public class ViewServiceActivity extends AppCompatActivity {
         mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(loggedInUser != null) {
+                        if (loggedInUser.getTypeOfUser().equals("ADMIN")) {
+                            mUsersListView.setVisibility(View.GONE);
+                        }
+                        if (loggedInUser.getTypeOfUser().equals("SP")) {
+                            mUsersListView.setVisibility(View.GONE);
+                        }
+                        if (loggedInUser.getTypeOfUser().equals("HOMEOWNER")) {
+                            mUsersListView.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+
                 List<User> tmp = new ArrayList<>();
                 tmp = mUsers;
                 mUsers.clear();
@@ -193,19 +212,28 @@ public class ViewServiceActivity extends AppCompatActivity {
 
     public void createReservation(View v){
         int position = mUsersListView.getPositionForView(v);
+        User user = mUsers.get(position);
+        psAssignedId = user.getId();
+        psAssignedName = user.getFirstName()+user.getLastName();
+        psAssignedRating = user.getRating();
+        psAssignedEmail = user.getEmail();
+
         System.out.println("Positionnnnnn "+position);
+        System.out.println("UserIddddd "+psAssignedId);
         Date dateNow = new Date();
         String date = dateNow.toString();
 
-        //Add user to database
-        String id = mAuth.getCurrentUser().getUid();
-        Reservation reservation = new Reservation(id , mService.getId(), position , loggedInUser.getId(), loggedInUser.getFirstName()+loggedInUser.getLastName(), mService.getTitle(), date, mService.getResource(), loggedInUser.getEmail());
-        mDatabaseReservations.child(id).setValue(reservation);
+        //Add reservation to database
+        String key = mDatabaseReservations.push().getKey();
+
+        //String Id,  String homeOwnerId, String homeOwnerName, String psAssignedId, String psAssignedName, int psAssignedRating, String serviceId, String serviceName, String serviceDescription, String date, String resource, String psAssignedEmail
+        Reservation reservation = new Reservation(key, loggedInUser.getId(), loggedInUser.getFirstName()+loggedInUser.getLastName(), psAssignedId, psAssignedName, psAssignedEmail, psAssignedRating, mService.getId(), mService.getTitle(), mService.getDescription(), date, mService.getResource());
+        mDatabaseReservations.child(key).setValue(reservation);
 
         //Send user to service list
         Intent sendToCurrentServiceList = new Intent(ViewServiceActivity.this, ServiceListActivity.class);
         startActivity(sendToCurrentServiceList);
-        Toast.makeText(ViewServiceActivity.this,"The reservation of "+reservation.getUsername() + " is created!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ViewServiceActivity.this,"The reservation of "+reservation.getHomeOwnerName() + " is created!", Toast.LENGTH_SHORT).show();
         finish();
     }
 

@@ -1,6 +1,7 @@
 package com.software.uottawa.helpme;
 
 import android.content.Context;
+import android.media.Rating;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,12 +58,19 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView providerFirstName = rowView.findViewById(R.id.first_name);
         TextView providerLastName = rowView.findViewById(R.id.last_name);
         TextView providerEmail = rowView.findViewById(R.id.email);
+        RatingBar rating =rowView.findViewById(R.id.ratingBar);
+        rating.setRating(user.getRating());
         if(user.getDisponibility()!=null) {
-            days = "[ ";
-            for (String day : user.getDisponibility()) {
+            days = "";
+            for (int i=0; i<user.getDisponibility().size()-1; i++){
+                days = days + user.getDisponibility().get(i)+ ", ";
+            }
+            days = days + user.getDisponibility().get(user.getDisponibility().size()-1)+ "";
+           /* for (String day : user.getDisponibility()) {
                 days = days +day+" ";
             }
             days = days +"]";
+        */
         }
         TextView providerDisponibility = rowView.findViewById(R.id.disponibility);
 

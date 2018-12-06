@@ -101,7 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="textPassword|textVisiblePassword"
+            android:inputType="textPassword"
+            android:password="true"
             android:textColorLink="@android:color/holo_blue_light"
             android:textSize="24sp"
             android:textStyle="bold" />
