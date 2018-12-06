@@ -30,6 +30,16 @@ public class Service {
         //SET BY DEFAULT BY ECLIPSE, CHANGE IF NECESSARY
     }
 
+    public Service(String mId, String mTitle,String mCreatorId,String mCreatorName,String mDescription, String mHourlyRate)
+    {
+        this.mId=mId;
+        this.mTitle=mTitle;
+        this.mCreatorId=mCreatorId;
+        this.mCreatorName=mCreatorName;
+        this.mDescription=mDescription;
+        this.mHourlyRate=mHourlyRate;
+    }
+
     /*
      *	getters et setters
      */
