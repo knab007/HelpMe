@@ -24,7 +24,7 @@ public class UserTest {
     @Test
     public void checkUserEmail() {
 
-        User aUser = new User("1","Samir","Tchakounte","samgmail@.com","homeOwner");
+        User aUser = new User("1","Samir","Tchakounte","Samgmail@.com","homeOwner");
         assertEquals("Check User Email", "Samgmail.com",aUser.getEmail());
 
     }
@@ -41,7 +41,7 @@ public class UserTest {
     public void checkUserId() {
 
         User aUser = new User("1","Samir","Tchakounte","samgmail@.com","homeOwner");
-        assertEquals("Check User Id", "Samir",aUser.getId());
+        assertEquals("Check User Id", "1",aUser.getId());
 
     }
 }
